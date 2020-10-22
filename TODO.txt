@@ -1,0 +1,70 @@
+Fenetre (600x900)
+
+Shop (dispo seulement entre les parties)
+	=> Améliorer les capacités de son vaisseau
+		-> Fréquense de tirs
+		-> Dégats
+		-> Vie
+		-> Vitesse (Si clavier)
+
+	=> Acheter un autre vaisseau
+	=> Acheter un autre fond
+	=> Acheter un autre ennemy
+
+Demande d'identification lors du lancement
+Enregistrement du profil (json)
+Enregistrement du score en fin de partie (json)
+Cassement générale
+
+					GAMEPLAY
+
+Choix de vaisseau
+
+Tuer des ennemys rapporte des pièces
+
+La difficulté augmente en fonction du temps de la partie ou du nombre d'ennemys tués
+
+Bonus
+	=> UP fréquence de tirs
+	=> +1 ligne de tirs
+	=> UP dégats
+	=> Regen 10% pv
+	=> Bouclier d'invincibilité
+	=> UP vitesse (Si clavier)
+
+Malux
+	=> DOWN fréquence de tirs
+	=> -1 ligne de tirs
+	=> Diminution des dégats
+	=> -10%/(20%) pv
+	=> Diminution de la vitesse
+	
+
+
+			PERSONNAGE
+ 
+ Perso se déplace sur tout l'écran (choix clavier/sourie)
+
+
+
+		  ENNEMYS
+
+Augmente avec la difficulté
+	=> Fréquence d'apparition
+	=> Agencement (Les ennemys forment un carré en arrivant)
+	=> Dégats
+	=> Fréquence de tirs
+	=> Vie
+		-> N'est pas la même pour tous les ennemys
+			. Si formation: 2 ou 3 ou 4 tirs pour les tuer en fontion de la taille de la formaion
+			. Si tout seul: 1 ou 2 tirs pour le tuer
+	=> Vitesse
+	=> Trajectoire (Utiliser des formules maths)
+
+Si apparition d'un formation, arrêt du spawn des enneys seul
+
+Boss
+	=> Beaucoup de vie
+	=> Beaucoup de dégats
+	=> Fréquence de tir très réduite
+	=> Vitesse très réduite
