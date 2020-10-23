@@ -41,7 +41,7 @@ Malux
 	
 
 
-			PERSONNAGE
+		PERSONNAGE
  
  Perso se déplace sur tout l'écran (choix clavier/sourie)
 
