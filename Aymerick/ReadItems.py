@@ -50,4 +50,6 @@ def loadImage():
     images["PersoAnimee"].append(pygame.image.load("images/Enemy/ennemi22.png").convert_alpha())
     images["PersoAnimee"].append(pygame.image.load("images/Enemy/ennemi23.png").convert_alpha())
 
+    
+
     return images

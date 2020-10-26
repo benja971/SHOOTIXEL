@@ -35,3 +35,5 @@ class MonstreAnimee(ElementGraphiqueAnimee):
 
 		self.rect.x = 50*math.cos(self.t/10) + 250
 		self.rect.y = 2*self.t
+
+# --------

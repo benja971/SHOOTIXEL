@@ -84,6 +84,7 @@ Vie25 = ElementGraphique(images['Vie25'], fenetre, largeur-75, 50)
 Vie50 = ElementGraphique(images['Vie50'], fenetre, largeur-75, 50)
 Vie75 = ElementGraphique(images['Vie75'], fenetre, largeur-75, 50)
 Vie100 = ElementGraphique(images['Vie100'], fenetre, largeur-75, 50)
+hit_sound = pygame.mixer.Sound("Son/Hit.wav")
 list_monstres = []
 list_bonus = []
 list_uplife = []
@@ -167,13 +168,15 @@ while continuer:
 
 		aSuppr = []
 
-		for balle in list_monstres:
-			if perso.collide(balle):
-				perso.Centre(balle, fenetre)
-				aSuppr.append(balle)
+		for monstre in list_monstres:
+			if perso.collide(monstre):
+				perso.Centre(monstre, fenetre)
+				aSuppr.append(monstre)
+				hit_sound.play()
 
-		for balle in aSuppr:
-			list_monstres.remove(balle)
+
+		for monstre in aSuppr:
+			list_monstres.remove(monstre)
 
 		aSuppr.clear()
 
@@ -188,6 +191,7 @@ while continuer:
 			list_bonus.remove(bonus)
 
 		aSuppr.clear()
+
 
 		for uplife in list_uplife:
 			if perso.collide(uplife):
@@ -207,7 +211,19 @@ while continuer:
 
 		fond.afficher()
 		perso.afficher()
-		Vie100.afficher()
+		# Vie100.afficher()
+
+		if perso.vie == 4 :
+			Vie100.afficher()
+
+		if perso.vie == 3 :
+			Vie75.afficher()
+		
+		if perso.vie == 2:
+			Vie50.afficher()
+
+		if perso.vie == 1:
+			Vie25.afficher()
 
 		for monstre in list_monstres:
 			monstre.afficher(fenetre)
