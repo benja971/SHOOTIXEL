@@ -5,7 +5,7 @@ from Class import *
 
 
 def images():
-	files = ["ennemy.png", "balle.png", "fond.jpg", "BgIntroG.png", "bullet_red.png", "2.png", "Play.png", "Exit.png", "Buy.png"]
+	files = ["ennemy.png", "balle.png", "fond.jpg", "BgIntroG.png", "bullet_blue.png", "2.png", "Play.png", "Exit.png", "Buy.png"]
 
 	bank = {
 		file.split('.')[0]:
@@ -16,19 +16,19 @@ def images():
 	return bank
 
 
-def New_Balle(img, enemys, largeur, hauteur, tirs, i):
-	done = True
-	x = randint(50, largeur - 50)
-	y = randint(-hauteur//2, 0)
+def New_Enemy(img, enemys, largeur, hauteur):
+	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, 15, 5, 20))
 
-	while not done:
-		for enemy in enemys:
-			dist = ((x - enemy.rect.x)**2 + (y - enemy.rect.y)**2)
 
-			if dist < 25:
-				done = False
-				x = randint(50, largeur - 50)
-				y = randint(-hauteur//2, 0)
-				break
-
-	enemys.append(Balle(img, x, y, 15, 5, 20, "enemy"))
+def formation(enemys, largeur, img):
+	"""
+	Groupe d'ennemis arrivant enssemble
+	"""	
+	enemys.append(Enemy(largeur// 2 - enemys[0].rect.w, -100, img, 20, 5, 15))
+	enemys.append(Enemy(largeur// 2 + enemys[0].rect.w, -100, img, 20, 5, 15))
+	enemys.append(Enemy(largeur// 2 - enemys[0].rect.w, -150, img, 20, 5, 15))
+	enemys.append(Enemy(largeur// 2 + enemys[0].rect.w, -150, img, 20, 5, 15))
+	enemys.append(Enemy(largeur// 2 - enemys[0].rect.w, -200, img, 20, 5, 15))
+	enemys.append(Enemy(largeur// 2 + enemys[0].rect.w, -200, img, 20, 5, 15))
+	enemys.append(Enemy(largeur// 2 - enemys[0].rect.w, -250, img, 20, 5, 15))
+	enemys.append(Enemy(largeur// 2 + enemys[0].rect.w, -250, img, 20, 5, 15))

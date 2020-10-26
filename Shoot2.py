@@ -11,24 +11,30 @@ pygame.init()
 
 largeur, hauteur = 600, 900
 fenetre = pygame.display.set_mode((largeur, hauteur))
-bank = images()
-horloge = pygame.time.Clock()
-i = 0
-continuer = True
-state = "Jeu"
 
+bank = images()
+
+horloge = pygame.time.Clock()
+
+# Variables du Jeu
+continuer = True
+i = 0
+state = "Jeu"
 enemys = []
 tirs = []
+couldown = 25
 
-fondIntro = ElementGraphique(bank["BgIntroG"], -700, -500)
-Play = ElementGraphique(bank["Play"], largeur//2, hauteur//5)
+
+# Menu
+fondIntro = ElementGraphique(-700, -500, bank["BgIntroG"])
+Play = ElementGraphique(largeur//2, hauteur//5, bank["Play"])
 Play.rect.x -= Play.rect.w//2
-Buy = ElementGraphique(bank["Buy"], largeur//2, 3 *hauteur//5 )
-Buy.rect.x -= Play.rect.w//2
-Quit = ElementGraphique(bank["Exit"], largeur//2, 2 *hauteur//5 )
+Quit = ElementGraphique( largeur//2, 2 *hauteur//5, bank["Exit"])
 Quit.rect.x -= Play.rect.w//2
+Buy = ElementGraphique(largeur//2, 3 *hauteur//5, bank["Buy"])
+Buy.rect.x -= Play.rect.w//2
 perso = Perso(bank["ennemy"], 250, 800, largeur, hauteur)
-fondJeu = ElementGraphique(bank["fond"], 0, 0)
+fondJeu = ElementGraphique(0, 0, bank["fond"])
 
 while continuer:
 	horloge.tick(30)
@@ -43,8 +49,7 @@ while continuer:
 			continuer = False
 
 	if state == "Menu":
-		
-		fondIntro.Afficher(fenetre)
+
 		Play.Afficher(fenetre)
 		Quit.Afficher(fenetre)
 		# Buy.Afficher(fenetre)
@@ -53,30 +58,28 @@ while continuer:
 
 		fondJeu.Afficher(fenetre)
 
-		if i%5 == 0:
-			New_Balle(bank["2"], enemys, largeur, hauteur, tirs, i)
+		if i%couldown == 0:
+			New_Enemy(bank["2"], enemys, largeur, hauteur)
+
+		if i%100 == 0:
+			formation(enemys, largeur, bank["2"])
 
 		for enemy in enemys:
 			enemy.Move()
 			enemy.Afficher(fenetre)
-			# Alive(enemys, enemy)
-			# perso.Collisions(enemy, enemys)
+			perso.Collisions(enemy, enemys)
 
 		for tir in tirs:
 			tir.Afficher(fenetre)
-			tir.MoveTirs()
+			tir.Move()
 			for enemy in enemys:
-				tir.Collisions(enemy, enemys)
+				tir.Collisions(enemy, enemys, perso)
 
 		perso.Afficher(fenetre)
 		perso.Deplacer(touches, largeur)
-		perso.Tir(tirs, bank["bullet_red"], i, touches)
+		perso.Tir(tirs, bank["bullet_blue"], touches, i)
 		perso.Alive()
 		
-	tirs = list(filter(lambda tir: tir.alive, tirs))
-	enemys = list(filter(lambda eneny: enemy.alive, enemys))
-
-
 	pygame.display.update()
 
 pygame.quit()

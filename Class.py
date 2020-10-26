@@ -3,7 +3,7 @@ from random import randint
 
 
 class ElementGraphique:
-	def __init__(self, img, x, y):
+	def __init__(self, x, y, img):
 		self.image = img
 		self.rect = self.image.get_rect()
 		self.rect.x = x
@@ -14,12 +14,17 @@ class ElementGraphique:
 
 
 class Perso(ElementGraphique):
+	"""
+	Personnage qu'incarne le joueur
+	"""
 	def __init__(self, img, x, y, largeur, hauteur):
-		super(Perso, self).__init__(img, x, y)
+		super(Perso, self).__init__(x, y, img)
 		self.rect.x = largeur // 2 - self.rect.w // 2
 		self.rect.y = hauteur - self.rect.h
 		self.vie = 100
 		self.vitesse = 10
+		self.couldown = 20
+		self.money = 0
 
 	def Deplacer(self, touches, largeur):
 		if touches[pygame.K_d] and self.rect.x <= largeur - self.rect.w:
@@ -27,41 +32,68 @@ class Perso(ElementGraphique):
 		if touches[pygame.K_a] and self.rect.x >= 0:
 			self.rect.x -= self.vitesse
 
-	def Collisions(self, balle, balles):
-		if balle.rect.colliderect(self.rect):
-			self.vie -= balle.degats
-			balle.alive = False
+	def Collisions(self, enemy, enemys):
+		if enemy.rect.colliderect(self.rect):
+			self.vie -= enemy.degats
+			if enemy in enemys:
+				enemys.remove(enemy)
 
-	def Tir(self, tirs, img, i, touches):
-		# if i % 7 == 0:
-		if touches[pygame.K_SPACE]:
-			tirs.append(Balle(img, self.rect.x + self.rect.w // 2,self.rect.y - self.rect.h // 2, 1, 5, 15, "tir"))
+	def Tir(self, tirs, img, touches, i):
+		if touches[pygame.K_SPACE] and i%self.couldown == 0:
+			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, 5, 15))
 
 	def Alive(self):
 		if self.vie <= 0:
 			print("Perdu")
 
-class Balle(ElementGraphique):
-	def __init__(self, img, x, y, pv, v, d, _type):
-		super(Balle, self).__init__(img, x, y)
-		self.type = _type
+
+class Enemy(ElementGraphique):
+	"""
+	Ennemis arrivant en face du personnage
+	"""
+	def __init__(self, x, y, img, pv, v, d):
+		super(Enemy, self).__init__(x, y, img)
 		self.vie = pv
+		self.vitesse = v
+		self.degats = d
+
+
+	def Move(self):
+		"""
+		Fonction qui gère le déplacement des ennemis
+		"""
+		self.rect.y += self.vitesse
+
+
+
+
+
+
+
+class Tir(ElementGraphique):
+	"""
+	Tirs du personnage
+	"""
+	def __init__(self, x, y, img, v, d):
+		super(Tir, self).__init__(x, y, img)
 		self.vitesse = v
 		self.degats = d
 		self.alive = True
 
 	def Move(self):
-		self.rect.y += self.vitesse
-
-	def MoveTirs(self):
+		"""
+		Fonction qui gère le déplacement des tirs
+		"""
 		self.rect.y -= self.vitesse
 
-	def Collisions(self, projectil, enemys):
-		if projectil.type == "enemy":
-			if projectil.rect.colliderect(self.rect):
-				projectil.vie -= self.degats	
-				self.alive = False
-			if projectil.vie <= 0:
-				projectil.alive = False
-				if not projectil.alive and projectil in enemys:
-					enemys.remove(projectil)
+	def Collisions(self, enemy, enemys, perso):
+		"""
+		Fonction qui gère lorsqu'un tir et un ennemi se touchent
+		"""
+		if self.rect.colliderect(enemy.rect):
+			self.alive = False
+			enemy.vie -= self.degats
+			if enemy in enemys and enemy.vie <= 0:
+				enemys.remove(enemy)
+				perso.money +=  randint(0, 1)
+				print(perso.money)
