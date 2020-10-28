@@ -33,7 +33,7 @@ Quit = ElementGraphique( largeur//2, 2 *hauteur//5, bank["Exit"])
 Quit.rect.x -= Play.rect.w//2
 Buy = ElementGraphique(largeur//2, 3 *hauteur//5, bank["Buy"])
 Buy.rect.x -= Play.rect.w//2
-perso = Perso(bank["ennemy"], 250, 800, largeur, hauteur)
+perso = Perso(bank["joueur"], 250, 800, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"])
 
 while continuer:

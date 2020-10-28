@@ -4,7 +4,7 @@ from Class import *
 
 
 def images():
-	files = ["ennemy.png", "balle.png", "fond.jpg", "BgIntroG.png", "bullet_blue.png", "2.png", "Play.png", "Exit.png", "Buy.png"]
+	files = ["joueur.png", "balle.png", "fond.jpg", "BgIntroG.png", "bullet_blue.png", "2.png", "Play.png", "Exit.png", "Buy.png"]
 
 	bank = {
 		file.split('.')[0]:
