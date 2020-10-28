@@ -1,18 +1,16 @@
-import math
+from math import cos
 from ElementGraphique import ElementGraphique
 
 class ElementGraphiqueAnimee(ElementGraphique):
-	def __init__(self, img=[], x=0, y=0, effect=None):
-		self.image = img
+	def __init__(self, img, fenetre, x, y):
+		super(ElementGraphiqueAnimee, self).__init__(img, fenetre, x, y)
 		self.fps = 0
 		self.numimage = 0
 		self.deltaX = 10
 		self.deltaY = 10
 		self.rect = self.image[self.numimage].get_rect()
-		self.rect.x = x
-		self.rect.y = y
 		self.alive = True
-		self.effect = effect
+		self.effect = None
 
 	def afficher(self, fenetre):
 		self.fps += 0.5
@@ -23,17 +21,13 @@ class ElementGraphiqueAnimee(ElementGraphique):
 # --------
 
 class MonstreAnimee(ElementGraphiqueAnimee):
-	def __init__(self, img, x=0, y=0):
-			ElementGraphiqueAnimee.__init__(self, img)
-			self.t = 0.0
-			self.truc = 10
-			self.centerx = x
-			self.centery = y
+	def __init__(self, img, fenetre, x, y):
+			super(MonstreAnimee, self).__init__(img, fenetre, x, y)
+			self.t = 0
 
 	def deplacer(self):
-		self.t += 1.0
-
-		self.rect.x = 50*math.cos(self.t/10) + 250
+		self.t += 1
+		self.rect.x = 50*cos(self.t/10) + 250
 		self.rect.y = 2*self.t
 
 # --------

@@ -2,24 +2,12 @@
 import pygame
 from random import*
 from pygame.locals import*
-# from ctypes import windll
-from pygame.locals import *
 from Bonus import *
 from Animation import *
 from Joueur import *
 from Monster import *
-from ReadItems import *
+from Fonction import *
 
-
-# from ctypes import windll
-# windll.shcore.SetProcessDpiAwareness(1)
-
-
-
-
-# def ajouterBalles(list_balles,fenetre):
-# 	if (i%300) == 0 and len(list_balles) < 3:
-# 		list_balles.append(BalleAnimee(images["PersoAnimee"],fenetre, largeur/2, hauteur/2))
 
 def ajouterMonstres(list_monstres, i, largeur, hauteur):
 	if (i % 100) == 0 and len(list_monstres) < 3:
@@ -36,17 +24,14 @@ def ajouterBonus(list_bonus, fenetre):
 def ajouterUpLife(list_uplife, fenetre):
 	if (i % 1500) == 0 and len(list_uplife) < 1:
 		list_uplife.append(
-			Bonus(images["uplife"], fenetre, largeur/2-30, hauteur/2-600))
+			Bonus(images["uplife"], fenetre, largeur/2-30, hauteur/2-600, None))
 
 
-def lireTextes():
-	textes = {}
-	return textes
 
 
 pygame.init()
 
-state = 'Intro'
+state = 'jeu'
 largeur = 600
 hauteur = 1000
 fenetre = pygame.display.set_mode((largeur, hauteur))
@@ -160,8 +145,6 @@ while continuer:
 	if state == 'jeu':
 		horloge.tick(75)
 		perso.deplacer(touches)
-		textes = lireTextes()
-
 		ajouterBonus(list_bonus, fenetre)
 		ajouterMonstres(list_monstres, i, largeur, hauteur)
 		ajouterUpLife(list_uplife, fenetre)
@@ -170,7 +153,7 @@ while continuer:
 
 		for monstre in list_monstres:
 			if perso.collide(monstre):
-				perso.Centre(monstre, fenetre)
+				perso.Centre(monstre, largeur)
 				aSuppr.append(monstre)
 				hit_sound.play()
 
@@ -227,7 +210,7 @@ while continuer:
 
 		for monstre in list_monstres:
 			monstre.afficher(fenetre)
-			monstre.deplacer()
+			monstre.deplacer(i)
 
 		for bonus in list_bonus:
 			bonus.afficher()

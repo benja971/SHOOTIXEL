@@ -1,4 +1,7 @@
 import pygame
+from Bonus import *
+from Monster import *
+from Animation import *
 
 
 def loadImage():
@@ -16,7 +19,7 @@ def loadImage():
     images['Option'] = pygame.image.load("images/Option.png").convert_alpha()
     images['Exit'] = pygame.image.load("images/Exit.png").convert_alpha()
     images['pointeur'] = pygame.image.load( "images/Pointeur.png").convert_alpha()
-    images['list_bonus'] = pygame.image.load("images/boost.png").convert_alpha()
+    images['boost'] = pygame.image.load("images/boost.png").convert_alpha()
     images['uplife'] = pygame.image.load("images/UpLife.png").convert_alpha()
 
 
@@ -53,3 +56,16 @@ def loadImage():
     
 
     return images
+    
+# --------
+
+def New_Bonus(i, Bonus_l, images, fenetre):
+	if i%800 == 0 and len(Bonus_l) <= 1:
+		Bonus_l.append(Bonus(images["boost"], fenetre, 0, 0, "speed", i))
+
+	if i%1500 == 0 and len(Bonus_l) <= 1:
+		Bonus_l.append(Bonus(images["uplife"], fenetre, 0, 0, "uplife", i))
+
+def New_Enemy(i, Enemys_l, images, largeur, fenetre):
+    if i%10 == 0:
+        Enemys_l.append(MonstreAnimee(images["PersoAnimee"], fenetre, randint(20, largeur-20), -50))
