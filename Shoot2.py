@@ -47,7 +47,8 @@ while continuer:
 			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre)
 
 		for enemy in enemys:
-			enemy.Move()
+			# enemy.deplacements()
+			enemy.DescenteLInéaire()
 			enemy.Afficher()
 			perso.Collisions(enemy, enemys)
 
@@ -56,7 +57,7 @@ while continuer:
 			tir.Move()
 			tir.Alive(tirs, tir)
 			for enemy in enemys:
-				tir.Collisions(enemy, enemys, perso)
+				tir.Collisions(enemy, enemys, tirs, perso)
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)

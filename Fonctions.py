@@ -20,4 +20,5 @@ def images():
 
 
 def New_Enemy(img, enemys, largeur, hauteur, fenetre):
-	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 5, 20, largeur, hauteur))
+	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur))
+	enemys[-1].ChoixDeplacement()

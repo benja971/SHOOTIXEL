@@ -1,5 +1,5 @@
 import pygame
-from random import randint
+from random import choice, randint
 from math import cos, sin
 
 class ElementGraphique:
@@ -85,28 +85,31 @@ class Enemy(ElementGraphiqueAnimé):
 		self.t = 0
 		self.trucx = randint(10, largeur -10)
 		self.trucy = randint(-10, 0)
-		self.trucx2 = randint(50, 200)
-		self.trucy2 = randint(50, 200)
+		self.trucx2 = randint(50, 550)
+		self.trucy2 = randint(50, 550)
 		self.centerx = x
 		self.centery = y
+		self.deplacements = None
 
 
-	def Move(self):
+	def DescenteLInéaire(self):
+		self.rect.y += self.vitesse
+
+	def DescenteEnCercles(self):
 		"""
-		Fonction qui gère le déplacement des ennemis
+		Les ennemis descendent en faisant des cercles de tailles différentes
 		"""
 		self.t += 1
-		self.rect.x = self.trucx2*cos(self.t/10) + self.trucx
-		self.rect.y = self.trucy2*sin(self.t/10) + self.trucy + self.t
+		self.rect.x = self.trucx2*cos(self.t/20) + self.trucx
+		self.rect.y = self.trucy2*sin(self.t/20) + self.trucy + self.t
 
-
-class DeplacementTordu(ElementGraphiqueAnimé):
-    def __init__(self, window, img, x=0, y=0):
-        ElementGraphique.__init__(self, window, img, x, y)
-        self.t = 0.0
-        self.truc = 10
-        self.centerx = x
-        self.centery = y
+	def DescenteSinusoïdale(self):
+		self.t += 1
+		self.rect.x = self.trucx2*cos(self.t/20) + self.trucx2
+		self.rect.y = self.t
+	
+	def ChoixDeplacement(self):
+		self.deplacements = choice([self.DescenteLInéaire, self.DescenteEnCercles, self.DescenteSinusoïdale])
 
 
 class Tir(ElementGraphique):
@@ -125,12 +128,14 @@ class Tir(ElementGraphique):
 		"""
 		self.rect.y -= self.vitesse
 
-	def Collisions(self, enemy, enemys, perso):
+	def Collisions(self, enemy, enemys, tirs, perso):
 		"""
 		Fonction qui gère lorsqu'un tir et un ennemi se touchent
 		"""
 		if self.rect.colliderect(enemy.rect):
-			self.alive = False
+			for tir in tirs:
+				if tir in tirs:
+					tirs.remove(tir)
 			enemy.vie -= self.degats
 			if enemy in enemys and enemy.vie <= 0:
 				enemys.remove(enemy)
