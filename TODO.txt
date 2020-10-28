@@ -60,6 +60,10 @@ Augmente avec la difficulté
 			. Si tout seul: 1 ou 2 tirs pour le tuer
 	=> Vitesse
 	=> Trajectoire (Utiliser des formules maths)
+		-> Début: Linéaire
+		-> Intermédiaire: Linéaire + Sinusoïdale
+		-> Intermédiaire +: Linéaire + Sinusoïdale + Cercles
+		-> Difficile: Tout
 
 Si apparition d'un formation, arrêt du spawn des enneys seul
 

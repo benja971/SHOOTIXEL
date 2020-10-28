@@ -22,7 +22,7 @@ class ElementGraphiqueAnimé(ElementGraphique):
 	Animation des Elements Graphiques
 	"""
 	def __init__(self, x, y, img, fenetre):
-		super(ElementGraphiqueAnimé, self).__init__(x, y, img[0], fenetre)
+		super().__init__(x, y, img[0], fenetre)
 		self.images = img
 		self.timer = 0
 		self.numAnim = 0
@@ -39,24 +39,44 @@ class ElementGraphiqueAnimé(ElementGraphique):
 		super().Afficher()
 
 
-class Perso(ElementGraphique):
+class ElementAnimeDir(ElementGraphiqueAnimé):
+	def __init__(self, x, y, images_all_dir, fenetre):
+		super().__init__(x, y, images_all_dir["Standing"], fenetre)
+		self.images_all_dir = images_all_dir
+		print(*images_all_dir)
+		self.direction ="Standing"
+		self.old_direction="Standing"
+
+
+	def Afficher(self) :
+		if self.old_direction != self.direction:
+			self.images = self.images_all_dir[self.direction]
+			self.numAnim = 0
+			self.old_direction = self.direction
+
+		super().Afficher()
+
+
+class Perso(ElementAnimeDir):
 	"""
 	Personnage qu'incarne le joueur
 	"""
-	def __init__(self, x, y, img, fenetre, largeur, hauteur):
-		super(Perso, self).__init__(x, y, img, fenetre)
+	def __init__(self, x, y, images_all_dir, fenetre, largeur, hauteur):
+		super().__init__(x, y, images_all_dir, fenetre)
 		self.rect.x = largeur // 2 - self.rect.w // 2
 		self.rect.y = hauteur - self.rect.h
 		self.vie = 100
-		self.vitesse = 10
+		self.vitesse = 4
 		self.couldown = 20
 		self.money = 0
 
 	def Deplacer(self, touches, largeur):
 		if touches[pygame.K_d] and self.rect.x <= largeur - self.rect.w:
 			self.rect.x += self.vitesse
+			self.direction = "Right"
 		if touches[pygame.K_a] and self.rect.x >= 0:
 			self.rect.x -= self.vitesse
+			self.direction = "Left"
 
 	def Collisions(self, enemy, enemys):
 		if enemy.rect.colliderect(self.rect):
@@ -78,7 +98,7 @@ class Enemy(ElementGraphiqueAnimé):
 	Ennemis animés arrivant en face du personnage
 	"""
 	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, hauteur):
-		super(Enemy, self).__init__(x, y, img, fenetre)
+		super().__init__(x, y, img, fenetre)
 		self.vie = pv
 		self.vitesse = v
 		self.degats = d
@@ -92,7 +112,10 @@ class Enemy(ElementGraphiqueAnimé):
 		self.deplacements = None
 
 
-	def DescenteLInéaire(self):
+	def DescenteLinéaire(self):
+		"""
+		Les ennemis descendent en ligne droite
+		"""
 		self.rect.y += self.vitesse
 
 	def DescenteEnCercles(self):
@@ -109,7 +132,7 @@ class Enemy(ElementGraphiqueAnimé):
 		self.rect.y = self.t
 	
 	def ChoixDeplacement(self):
-		self.deplacements = choice([self.DescenteLInéaire, self.DescenteEnCercles, self.DescenteSinusoïdale])
+		self.deplacements = choice([self.DescenteLinéaire, self.DescenteEnCercles, self.DescenteSinusoïdale])
 
 
 class Tir(ElementGraphique):
@@ -117,7 +140,7 @@ class Tir(ElementGraphique):
 	Tirs du personnage
 	"""
 	def __init__(self, x, y, img, fenetre, v, d):
-		super(Tir, self).__init__(x, y, img, fenetre)
+		super().__init__(x, y, img, fenetre)
 		self.vitesse = v
 		self.degats = d
 		self.alive = True
@@ -127,6 +150,7 @@ class Tir(ElementGraphique):
 		Fonction qui gère le déplacement des tirs
 		"""
 		self.rect.y -= self.vitesse
+
 
 	def Collisions(self, enemy, enemys, tirs, perso):
 		"""
@@ -144,4 +168,3 @@ class Tir(ElementGraphique):
 	def Alive(self,tirs, tir):
 		if tir.rect.y < -20 and tir in tirs:
 			tirs.remove(tir)
-			print(len(tirs))

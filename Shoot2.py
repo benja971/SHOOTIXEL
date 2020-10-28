@@ -1,6 +1,4 @@
 import pygame
-import os
-from random import randint, random
 from Class import *
 from Fonctions import *
 from ctypes import windll
@@ -24,6 +22,7 @@ enemys = []
 tirs = []
 couldown = 25
 
+# print(bank["perso"][0])
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 
@@ -48,7 +47,8 @@ while continuer:
 
 		for enemy in enemys:
 			# enemy.deplacements()
-			enemy.DescenteLInéaire()
+			# enemy.DescenteLinéaire()
+			enemy.DescenteSinusoïdale()
 			enemy.Afficher()
 			perso.Collisions(enemy, enemys)
 

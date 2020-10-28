@@ -6,14 +6,27 @@ from Class import *
 def images():
 
 	bank = {}
+
 	bank["fond"] = pygame.image.load("./Images/fond.jpg")
-	bank["perso"] = pygame.image.load("./Images/Vaisseaux/vaisseaubleu.png")
+	bank["enemys"] = []
 	bank["tirs"] = pygame.image.load("./Images/Tirs/bullet_blue.png")
 
-	bank["enemys"] = []
 	for i in range(1, 23):
 		bank["enemys"].append(pygame.image.load("./Images/Enemy/ennemi" + str(i) + ".png"))
-	
+
+	imgPerso = {}
+	imgPerso["Right"] = []
+	imgPerso["Left"] = []
+	imgPerso["Standing"] = []
+
+	for i in range(1,3):
+		imgPerso["Right"].append(pygame.image.load("./Images/Vaisseaux/PlayerRight" + str(i) + ".png"))
+		imgPerso["Left"].append(pygame.image.load("./Images/Vaisseaux/PlayerLeft" + str(i) + ".png"))
+
+	imgPerso["Standing"].append(pygame.image.load("./Images/Vaisseaux/Standing.png"))
+
+	bank["perso"] = imgPerso
+
 
 
 	return bank
