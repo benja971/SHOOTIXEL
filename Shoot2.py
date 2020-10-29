@@ -9,8 +9,9 @@ pygame.init()
 
 largeur, hauteur = 600, 900
 fenetre = pygame.display.set_mode((largeur, hauteur))
+font = pygame.font.Font(None, 30)
 
-bank = images()
+bank = images(font)
 
 horloge = pygame.time.Clock()
 
@@ -20,11 +21,12 @@ time = 0
 state = "Jeu"
 enemys = []
 tirs = []
-couldown = 25
+couldown = 40
 
 # print(bank["perso"][0])
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
+score = ElementGraphique(0, 0, bank["score"], fenetre)
 
 while continuer:
 	horloge.tick(60)
@@ -41,14 +43,14 @@ while continuer:
 	if state == "Jeu":
 
 		fondJeu.Afficher()
-
+		
+		# couldown = Difficulty(time, couldown)
 		if time%couldown == 0:
 			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre)
 
 		for enemy in enemys:
-			# enemy.deplacements()
-			# enemy.DescenteLinéaire()
-			enemy.DescenteSinusoïdale()
+			enemy.deplacer()
+			enemy.difficulte(time)
 			enemy.Afficher()
 			perso.Collisions(enemy, enemys)
 
@@ -62,8 +64,13 @@ while continuer:
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
 		perso.Tir(tirs, bank["tirs"], touches, time)
-		perso.Alive()
-		
+		# perso.Alive()
+		bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
+		kill = ElementGraphique(70, 0, bank["kill"], fenetre)
+		print(perso.kill)
+		score.Afficher()
+		kill.Afficher()
+
 	pygame.display.update()
 
 pygame.quit()

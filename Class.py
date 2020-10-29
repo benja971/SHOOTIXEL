@@ -49,9 +49,11 @@ class ElementAnimeDir(ElementGraphiqueAnimé):
 
 
 	def Afficher(self) :
+		print(self.numAnim, end="\r")
+
 		if self.old_direction != self.direction:
 			self.images = self.images_all_dir[self.direction]
-			self.numAnim = 0
+			self.numAnim=0
 			self.old_direction = self.direction
 
 		super().Afficher()
@@ -69,11 +71,13 @@ class Perso(ElementAnimeDir):
 		self.vitesse = 4
 		self.couldown = 20
 		self.money = 0
+		self.kill = 0
 
 	def Deplacer(self, touches, largeur):
 		if touches[pygame.K_d] and self.rect.x <= largeur - self.rect.w:
 			self.rect.x += self.vitesse
 			self.direction = "Right"
+
 		if touches[pygame.K_a] and self.rect.x >= 0:
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
@@ -109,7 +113,8 @@ class Enemy(ElementGraphiqueAnimé):
 		self.trucy2 = randint(50, 550)
 		self.centerx = x
 		self.centery = y
-		self.deplacements = None
+		self.deplacements = [self.DescenteLinéaire]
+		self.deplacer = None
 
 
 	def DescenteLinéaire(self):
@@ -132,8 +137,13 @@ class Enemy(ElementGraphiqueAnimé):
 		self.rect.y = self.t
 	
 	def ChoixDeplacement(self):
-		self.deplacements = choice([self.DescenteLinéaire, self.DescenteEnCercles, self.DescenteSinusoïdale])
-
+		self.deplacer = choice(self.deplacements)
+	
+	def difficulte(self, time):
+		if time >= 500:
+			self.deplacements.append(self.DescenteEnCercles)
+		if time >= 1000:
+			self.deplacements.append(self.DescenteSinusoïdale)
 
 class Tir(ElementGraphique):
 	"""
@@ -163,6 +173,7 @@ class Tir(ElementGraphique):
 			enemy.vie -= self.degats
 			if enemy in enemys and enemy.vie <= 0:
 				enemys.remove(enemy)
+				perso.kill += 1
 				perso.money +=  randint(0, 1)
 
 	def Alive(self,tirs, tir):

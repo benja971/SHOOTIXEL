@@ -1,12 +1,11 @@
-def a():
-    print("a")
+import matplotlib.pyplot as plt
+import numpy as np
 
-def b():
-    print("b")
+t = np.linspace(0,1000,num=10000)
 
-def c():
-    print("c")
+x = np.cos(t/10)+100
+y = 2*t
 
-f = [a, b, c]
-
-f[0]()
+plt.figure(figsize=(5,5))
+plt.plot(x,y,'r.')
+plt.show()
