@@ -1,13 +1,10 @@
 import pygame
 from Class import *
 from Fonctions import *
-from ctypes import windll
-
-windll.shcore.SetProcessDpiAwareness(1)
 
 pygame.init()
 
-largeur, hauteur = 600, 900
+largeur, hauteur = 600, 700
 fenetre = pygame.display.set_mode((largeur, hauteur))
 font = pygame.font.Font(None, 30)
 
@@ -20,10 +17,9 @@ continuer = True
 time = 0
 state = "Jeu"
 enemys = []
-tirs = []
+tirsPerso = []
 couldown = 40
 
-# print(bank["perso"][0])
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
@@ -44,7 +40,6 @@ while continuer:
 
 		fondJeu.Afficher()
 		
-		# couldown = Difficulty(time, couldown)
 		if time%couldown == 0:
 			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre)
 
@@ -52,22 +47,23 @@ while continuer:
 			enemy.deplacer()
 			enemy.difficulte(time)
 			enemy.Afficher()
-			perso.Collisions(enemy, enemys)
+			enemy.Remove(enemys)
+			enemy.Collisions(perso)
+			for tir in tirsPerso:
+				enemy.Collisions(tir)
 
-		for tir in tirs:
+		for tir in tirsPerso:
 			tir.Afficher()
 			tir.Move()
-			tir.Alive(tirs, tir)
-			for enemy in enemys:
-				tir.Collisions(enemy, enemys, tirs, perso)
+			tir.Remove(tirsPerso)
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
-		perso.Tir(tirs, bank["tirs"], touches, time)
-		# perso.Alive()
+		perso.Tir(tirsPerso, bank["tirs"], touches, time)
+
 		bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 		kill = ElementGraphique(70, 0, bank["kill"], fenetre)
-		print(perso.kill)
+
 		score.Afficher()
 		kill.Afficher()
 

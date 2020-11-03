@@ -4,7 +4,7 @@ from math import cos, sin
 
 class ElementGraphique:
 	"""
-	Tous est élément graphique
+	Tout est élément graphique
 	"""
 	def __init__(self, x, y, img, fenetre):
 		self.image = img
@@ -12,6 +12,45 @@ class ElementGraphique:
 		self.rect.x = x
 		self.rect.y = y
 		self.fenetre = fenetre
+
+	def Collide(self, other):
+		if self.rect.colliderect(other.rect):
+			return True
+		return False
+
+	def Collisions(self, other):
+		"""
+		Fonction que gère lorsqu'un élément en touche un autre
+		"""
+		if self.Collide(other):
+
+			if self.type == "Enemy":
+				if other.type == "TirPerso":
+					self.TakeDamages(other)
+					other.Kill()
+
+				elif other.type == "Perso":
+					other.TakeDamages(self)
+					self.Kill()
+
+	def TakeDamages(self, other):
+		"""
+		Fonction qui retire de la vie à un élément en cas de collision
+		"""
+		self.vie -= other.degats
+
+	def Kill(self):
+		"""
+		Fonction qui tue un élément
+		"""
+		self.vie = 0
+
+	def Remove(self, list_conscernee):
+		"""
+		Fonction qui supprime les éléments qui n'ont plus lieu d'être
+		"""
+		if self.vie <= 0 and self in list_conscernee:
+			list_conscernee.remove(self)
 
 	def Afficher(self):
 		self.fenetre.blit(self.image, self.rect)
@@ -43,14 +82,11 @@ class ElementAnimeDir(ElementGraphiqueAnimé):
 	def __init__(self, x, y, images_all_dir, fenetre):
 		super().__init__(x, y, images_all_dir["Standing"], fenetre)
 		self.images_all_dir = images_all_dir
-		print(*images_all_dir)
 		self.direction ="Standing"
 		self.old_direction="Standing"
 
 
 	def Afficher(self) :
-		print(self.numAnim, end="\r")
-
 		if self.old_direction != self.direction:
 			self.images = self.images_all_dir[self.direction]
 			self.numAnim=0
@@ -65,11 +101,12 @@ class Perso(ElementAnimeDir):
 	"""
 	def __init__(self, x, y, images_all_dir, fenetre, largeur, hauteur):
 		super().__init__(x, y, images_all_dir, fenetre)
+		self.type = "Perso"
 		self.rect.x = largeur // 2 - self.rect.w // 2
 		self.rect.y = hauteur - self.rect.h
 		self.vie = 100
 		self.vitesse = 4
-		self.couldown = 20
+		self.cooldown = 20
 		self.money = 0
 		self.kill = 0
 
@@ -77,19 +114,17 @@ class Perso(ElementAnimeDir):
 		if touches[pygame.K_d] and self.rect.x <= largeur - self.rect.w:
 			self.rect.x += self.vitesse
 			self.direction = "Right"
+		else : 
+			self.numAnim = 0
 
 		if touches[pygame.K_a] and self.rect.x >= 0:
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
-
-	def Collisions(self, enemy, enemys):
-		if enemy.rect.colliderect(self.rect):
-			self.vie -= enemy.degats
-			if enemy in enemys:
-				enemys.remove(enemy)
+		else :
+			self.numAnim = 0
 
 	def Tir(self, tirs, img, touches, i):
-		if touches[pygame.K_SPACE] and i%self.couldown == 0:
+		if touches[pygame.K_SPACE] and i%self.cooldown == 0:
 			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15))
 
 	def Alive(self):
@@ -107,6 +142,7 @@ class Enemy(ElementGraphiqueAnimé):
 		self.vitesse = v
 		self.degats = d
 		self.t = 0
+		self.type = "Enemy"
 		self.trucx = randint(10, largeur -10)
 		self.trucy = randint(-10, 0)
 		self.trucx2 = randint(50, 550)
@@ -132,18 +168,30 @@ class Enemy(ElementGraphiqueAnimé):
 		self.rect.y = self.trucy2*sin(self.t/20) + self.trucy + self.t
 
 	def DescenteSinusoïdale(self):
+		"""
+		Les ennemis descendent en suivant des trajectoires sinusoîdales
+		"""
 		self.t += 1
 		self.rect.x = self.trucx2*cos(self.t/20) + self.trucx2
 		self.rect.y = self.t
 	
 	def ChoixDeplacement(self):
+		"""
+		Fonction qui choisie la facon dont l'ennemi va se déplacer
+		"""
 		self.deplacer = choice(self.deplacements)
 	
 	def difficulte(self, time):
+		"""
+		Fonction qui change la facon dont se déplacent les ennemis en fonction du temps de jeu
+		"""
 		if time >= 500:
 			self.deplacements.append(self.DescenteEnCercles)
 		if time >= 1000:
 			self.deplacements.append(self.DescenteSinusoïdale)
+
+
+
 
 class Tir(ElementGraphique):
 	"""
@@ -151,31 +199,13 @@ class Tir(ElementGraphique):
 	"""
 	def __init__(self, x, y, img, fenetre, v, d):
 		super().__init__(x, y, img, fenetre)
+		self.type = "TirPerso"
 		self.vitesse = v
 		self.degats = d
-		self.alive = True
+		self.vie = 1
 
 	def Move(self):
 		"""
-		Fonction qui gère le déplacement des tirs
+		Fonction qui gère le déplacement des tirs du Perso
 		"""
 		self.rect.y -= self.vitesse
-
-
-	def Collisions(self, enemy, enemys, tirs, perso):
-		"""
-		Fonction qui gère lorsqu'un tir et un ennemi se touchent
-		"""
-		if self.rect.colliderect(enemy.rect):
-			for tir in tirs:
-				if tir in tirs:
-					tirs.remove(tir)
-			enemy.vie -= self.degats
-			if enemy in enemys and enemy.vie <= 0:
-				enemys.remove(enemy)
-				perso.kill += 1
-				perso.money +=  randint(0, 1)
-
-	def Alive(self,tirs, tir):
-		if tir.rect.y < -20 and tir in tirs:
-			tirs.remove(tir)

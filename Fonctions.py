@@ -36,8 +36,4 @@ def New_Enemy(img, enemys, largeur, hauteur, fenetre):
 	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur))
 	enemys[-1].ChoixDeplacement()
 
-def Difficulty(time, couldown):
-	if time%100 == 0:
-		couldown = couldown - couldown*0.1
-		return couldown
 		
