@@ -24,7 +24,7 @@ class ElementGraphique:
 		"""
 		if self.Collide(other):
 
-			if self.type == "Enemy":
+			if self.type == "Enemy" or self.type == "Boss":
 				if other.type == "TirPerso":
 					self.TakeDamages(other)
 					other.Kill()
@@ -115,12 +115,14 @@ class Perso(ElementAnimeDir):
 			self.rect.x += self.vitesse
 			self.direction = "Right"
 		else : 
+			self.direction = "Standing"
 			self.numAnim = 0
 
 		if touches[pygame.K_a] and self.rect.x >= 0:
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
 		else :
+			self.direction = "Standing"
 			self.numAnim = 0
 
 	def Tir(self, tirs, img, touches, i):
@@ -149,9 +151,6 @@ class Enemy(ElementGraphiqueAnimé):
 		self.trucy2 = randint(50, 550)
 		self.centerx = x
 		self.centery = y
-		self.deplacements = [self.DescenteLinéaire]
-		self.deplacer = None
-
 
 	def DescenteLinéaire(self):
 		"""
@@ -164,8 +163,8 @@ class Enemy(ElementGraphiqueAnimé):
 		Les ennemis descendent en faisant des cercles de tailles différentes
 		"""
 		self.t += 1
-		self.rect.x = self.trucx2*cos(self.t/20) + self.trucx
-		self.rect.y = self.trucy2*sin(self.t/20) + self.trucy + self.t
+		self.rect.x = 50*cos(self.t/20) + self.trucx
+		self.rect.y = 50*sin(self.t/20) + self.trucy + self.t
 
 	def DescenteSinusoïdale(self):
 		"""
@@ -175,24 +174,6 @@ class Enemy(ElementGraphiqueAnimé):
 		self.rect.x = self.trucx2*cos(self.t/20) + self.trucx2
 		self.rect.y = self.t
 	
-	def ChoixDeplacement(self):
-		"""
-		Fonction qui choisie la facon dont l'ennemi va se déplacer
-		"""
-		self.deplacer = choice(self.deplacements)
-	
-	def difficulte(self, time):
-		"""
-		Fonction qui change la facon dont se déplacent les ennemis en fonction du temps de jeu
-		"""
-		if time >= 500:
-			self.deplacements.append(self.DescenteEnCercles)
-		if time >= 1000:
-			self.deplacements.append(self.DescenteSinusoïdale)
-
-
-
-
 class Tir(ElementGraphique):
 	"""
 	Tirs du personnage

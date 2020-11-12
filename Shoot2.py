@@ -18,7 +18,11 @@ time = 0
 state = "Jeu"
 enemys = []
 tirsPerso = []
-couldown = 40
+deplacements = []
+cooldownEn = 40
+cooldownBoss = 1000
+countBoss = 0
+boss = False
 
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
@@ -40,12 +44,18 @@ while continuer:
 
 		fondJeu.Afficher()
 		
-		if time%couldown == 0:
-			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre)
+		if time%cooldownEn == 0 and not boss:
+			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, deplacements)
+
+		if time%cooldownBoss == 0:
+			boss = True
+			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, deplacements)
+
+		if len(enemys)>0:
+			boss = BossTimer(enemys[-1])
 
 		for enemy in enemys:
-			enemy.deplacer()
-			enemy.difficulte(time)
+			enemy.DescenteLinéaire()
 			enemy.Afficher()
 			enemy.Remove(enemys)
 			enemy.Collisions(perso)
