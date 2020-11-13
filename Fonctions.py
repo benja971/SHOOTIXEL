@@ -38,13 +38,13 @@ def images(font):
 	return bank
 
 
-def New_Enemy(img, enemys, largeur, hauteur, fenetre, deplacements):
+def New_Enemy(img, enemys, largeur, hauteur, fenetre):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
 	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur, "Enemy"))
 	
-def New_Boss(img, enemys, largeur, hauteur, fenetre, deplacements):
+def New_Boss(img, enemys, largeur, hauteur, fenetre):
 	"""
 	Fonction qui ajoute 1 boss à la liste d'ennemis
 

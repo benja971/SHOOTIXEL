@@ -46,11 +46,11 @@ while continuer:
 		fondJeu.Afficher()
 		
 		if time%cooldownEn == 0 and not boss:
-			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, deplacements)
+			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre)
 
 		if time%cooldownBoss == 0:
 			boss = True
-			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, deplacements)
+			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre)
 
 		if len(enemys)>0:
 			boss = BossTimer(enemys[-1])
