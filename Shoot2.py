@@ -75,7 +75,6 @@ while continuer:
 
 		bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 		kill = ElementGraphique(70, 0, bank["kill"], fenetre)
-
 		score.Afficher()
 		kill.Afficher()
 
