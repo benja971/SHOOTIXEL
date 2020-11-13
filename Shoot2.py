@@ -17,8 +17,9 @@ continuer = True
 time = 0
 state = "Jeu"
 enemys = []
+enemys_keep = []
 tirsPerso = []
-deplacements = []
+tirsPerso_keep = []
 cooldownEn = 40
 cooldownBoss = 1000
 countBoss = 0
@@ -57,7 +58,6 @@ while continuer:
 		for enemy in enemys:
 			enemy.DescenteLinéaire()
 			enemy.Afficher()
-			enemy.Remove(enemys)
 			enemy.Collisions(perso)
 			for tir in tirsPerso:
 				enemy.Collisions(tir)
@@ -65,11 +65,13 @@ while continuer:
 		for tir in tirsPerso:
 			tir.Afficher()
 			tir.Move()
-			tir.Remove(tirsPerso)
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
 		perso.Tir(tirsPerso, bank["tirs"], touches, time)
+
+		enemys = SupprTrucs(enemys)
+		tirsPerso = SupprTrucs(tirsPerso)
 
 		bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 		kill = ElementGraphique(70, 0, bank["kill"], fenetre)

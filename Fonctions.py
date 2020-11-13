@@ -59,3 +59,14 @@ def BossTimer(boss):
 	if boss.vie >= 0 and boss.type == "Boss":
 		return True
 	return False
+
+
+def SupprTrucs(liste):
+	"""
+	docstring
+	"""
+	liste_keep = []
+	for element in liste:
+		if element.vie > 0:
+			liste_keep.append(element)
+	return liste_keep
