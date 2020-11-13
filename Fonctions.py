@@ -42,15 +42,14 @@ def New_Enemy(img, enemys, largeur, hauteur, fenetre, deplacements):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
-	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur))
+	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur, "Enemy"))
 	
 def New_Boss(img, enemys, largeur, hauteur, fenetre, deplacements):
 	"""
-	Fonction qui ajoute 1 boss à la liste des boss
+	Fonction qui ajoute 1 boss à la liste d'ennemis
 
 	"""	
-	enemys.append(Enemy(largeur//2 -15, -10, img, fenetre, 200, 1, 0, largeur, hauteur))
-	enemys[-1].type = "Boss"
+	enemys.append(Enemy(largeur//2 -15, -10, img, fenetre, 200, 1, 0, largeur, hauteur, "Boss"))
 
 def BossTimer(boss):
 	"""
