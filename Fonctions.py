@@ -13,6 +13,7 @@ def images(font):
 	bank["enemys"] = []
 	bank["tirs"] = pygame.image.load("./Images/Tirs/bullet_blue.png")
 	bank["boss"] = []
+	bank["boost"] = pygame.image.load("./Images/boost.png")
 
 	# for i in range(1, 23):
 	# 	bank["enemys"].append(pygame.image.load("./Images/Enemy/ennemi" + str(i) + ".png"))
@@ -42,8 +43,10 @@ def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
+
 	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur, "Enemy"))
 	enemys[-1].Choix(i)
+
 	
 def New_Boss(img, enemys, largeur, hauteur, fenetre, i):
 	"""
@@ -60,6 +63,11 @@ def BossTimer(boss):
 	if boss.vie >= 0 and boss.type == "Boss":
 		return True
 	return False
+	enemys[-1].ChoixDeplacement()
+
+def New_Bonus(time, tabBonus, bank, fenetre):
+	if time%200 == 0 and len(tabBonus) <= 1:
+		tabBonus.append(Bonus(bank["boost"], fenetre, 0, 0, "speed", time))
 
 
 def SupprTrucs(liste):
@@ -70,8 +78,6 @@ def SupprTrucs(liste):
 	for element in liste:
 		if element.vie > 0:
 			liste_keep.append(element)
+			
 	x = len(liste) - len(liste_keep)
 	return x, liste_keep
-
-
-	

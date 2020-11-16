@@ -24,7 +24,7 @@ class ElementGraphique:
 		"""
 		if self.Collide(other):
 
-			if self.type == "Enemy" or self.type == "Boss":
+			if self.type == "Enemy" or self.type == "Boss" or self.type == "bonus":
 				if other.type == "TirPerso":
 					self.TakeDamages(other)
 					other.Kill()
@@ -127,6 +127,11 @@ class Perso(ElementAnimeDir):
 		if touches[pygame.K_SPACE] and i%self.cooldown == 0:
 			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15))
 
+	def Bonus(self, bonus):
+		if self.colliderect(bonus):
+			if self.object == 'speed':
+				self.vitesse = 4*2
+
 	def Alive(self):
 		if self.vie <= 0:
 			print("Perdu")
@@ -195,3 +200,31 @@ class Tir(ElementGraphique):
 		Fonction qui gère le déplacement des tirs du Perso
 		"""
 		self.rect.y -= self.vitesse
+
+class Bonus(ElementGraphique):
+	def __init__(self, x, y, img, fenetre, bonus, time):
+		super(Bonus, self).__init__(img, fenetre, x,y)
+		self.vx = choice([-5, 5])
+		self.vy = choice([-5, 5])
+		self.type = 'bonus'
+		self.object = bonus
+		self.time = time
+	
+	def Deplacer(self, largeur, hauteur):
+		self.rect.x += self.vx
+		if self.rect.x > largeur - self.rect.w:
+			self.vx = -abs(self.vx)
+		if self.rect.x < 0:
+			self.vx = abs(self.vx)
+
+		self.rect.y += self.vy
+		if self.rect.y > hauteur - self.rect.h :
+			self.vy = -abs(self.vy)
+		if self.rect.y < 0 :
+			self.vy = abs(self.vy)
+
+	def alive(self, time, tabBonus):
+		if time - self.time >= 250:
+			if self in tabBonus:
+				tabBonus.remove(self)
+		
