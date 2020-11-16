@@ -24,7 +24,7 @@ class ElementGraphique:
 		"""
 		if self.Collide(other):
 
-			if self.type == "Enemy" or self.type == "Boss":
+			if self.type == "Enemy" or self.type == "Boss" or self.type == "bonus":
 				if other.type == "TirPerso":
 					self.TakeDamages(other)
 					other.Kill()
@@ -129,7 +129,7 @@ class Perso(ElementAnimeDir):
 
 	def Bonus(self, bonus):
 		if self.colliderect(bonus):
-			if self.type == 'speed':
+			if self.object == 'speed':
 				self.vitesse = 4*2
 
 	def Alive(self):
@@ -199,7 +199,8 @@ class Bonus(ElementGraphique):
 		super(Bonus, self).__init__(img, fenetre, x,y)
 		self.vx = choice([-5, 5])
 		self.vy = choice([-5, 5])
-		self.type = bonus
+		self.type = 'bonus'
+		self.object = bonus
 		self.time = time
 	
 	def Deplacer(self, largeur, hauteur):
