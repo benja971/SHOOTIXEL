@@ -111,19 +111,17 @@ class Perso(ElementAnimeDir):
 		self.kill = 0
 
 	def Deplacer(self, touches, largeur):
+		self.direction = "Standing"
+		self.numAnim = 0
+
 		if touches[pygame.K_d] and self.rect.x <= largeur - self.rect.w:
 			self.rect.x += self.vitesse
 			self.direction = "Right"
-		else : 
-			self.direction = "Standing"
-			self.numAnim = 0
 
 		if touches[pygame.K_a] and self.rect.x >= 0:
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
-		else :
-			self.direction = "Standing"
-			self.numAnim = 0
+
 
 	def Tir(self, tirs, img, touches, i):
 		if touches[pygame.K_SPACE] and i%self.cooldown == 0:
@@ -143,13 +141,13 @@ class Enemy(ElementGraphiqueAnimé):
 	"""
 	Ennemis animés arrivant en face du personnage
 	"""
-	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, hauteur):
+	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, hauteur, _type):
 		super().__init__(x, y, img, fenetre)
 		self.vie = pv
 		self.vitesse = v
 		self.degats = d
 		self.t = 0
-		self.type = "Enemy"
+		self.type = _type
 		self.trucx = randint(10, largeur -10)
 		self.trucy = randint(-10, 0)
 		self.trucx2 = randint(50, 550)

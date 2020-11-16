@@ -43,20 +43,18 @@ def images(font):
 	return bank
 
 
-def New_Enemy(img, enemys, largeur, hauteur, fenetre, deplacements):
+def New_Enemy(img, enemys, largeur, hauteur, fenetre):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
-	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur))
-<<<<<<< Updated upstream
+	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur, "Enemy"))
 	
-def New_Boss(img, enemys, largeur, hauteur, fenetre, deplacements):
+def New_Boss(img, enemys, largeur, hauteur, fenetre):
 	"""
-	Fonction qui ajoute 1 boss à la liste des boss
+	Fonction qui ajoute 1 boss à la liste d'ennemis
 
 	"""	
-	enemys.append(Enemy(largeur//2 -15, -10, img, fenetre, 200, 1, 0, largeur, hauteur))
-	enemys[-1].type = "Boss"
+	enemys.append(Enemy(largeur//2 -15, -10, img, fenetre, 200, 1, 0, largeur, hauteur, "Boss"))
 
 def BossTimer(boss):
 	"""
@@ -67,10 +65,3 @@ def BossTimer(boss):
 	return False
 =======
 	enemys[-1].ChoixDeplacement()
-
-def New_Bonus(time, tabBonus, bank, fenetre):
-	if time%800 == 0 and len(tabBonus) <= 1:
-		tabBonus.append(Bonus(bank["boost"], fenetre, 0, 0, "speed", time))
-
-		
->>>>>>> Stashed changes
