@@ -103,7 +103,7 @@ class Perso(ElementAnimeDir):
 		super().__init__(x, y, images_all_dir, fenetre)
 		self.type = "Perso"
 		self.rect.x = largeur // 2 - self.rect.w // 2
-		self.rect.y = hauteur - self.rect.h
+		self.rect.y = hauteur - self.rect.h - 20
 		self.vie = 100
 		self.vitesse = 4
 		self.cooldown = 20
@@ -132,6 +132,8 @@ class Perso(ElementAnimeDir):
 			print("Perdu")
 
 
+
+
 class Enemy(ElementGraphiqueAnimé):
 	"""
 	Ennemis animés arrivant en face du personnage
@@ -143,12 +145,17 @@ class Enemy(ElementGraphiqueAnimé):
 		self.degats = d
 		self.t = 0
 		self.type = _type
-		self.trucx = randint(10, largeur -10)
 		self.trucy = randint(-10, 0)
-		self.trucx2 = randint(50, 550)
-		self.trucy2 = randint(50, 550)
-		self.centerx = x
-		self.centery = y
+		self.truc2 = randint(10, largeur - 10)
+		self.Deplacer = self.DescenteLinéaire
+
+	def Choix(self, i):
+		"""
+		"""
+		if 1000 < i < 2500:
+			self.Deplacer = choice([self.DescenteLinéaire, self.DescenteEnCercles])
+		elif 2501 < i:
+			self.Deplacer = choice([self.DescenteLinéaire, self.DescenteEnCercles, self.DescenteSinusoïdale])
 
 	def DescenteLinéaire(self):
 		"""
@@ -161,7 +168,7 @@ class Enemy(ElementGraphiqueAnimé):
 		Les ennemis descendent en faisant des cercles de tailles différentes
 		"""
 		self.t += 1
-		self.rect.x = 50*cos(self.t/20) + self.trucx
+		self.rect.x = 50*cos(self.t/20) + self.truc2
 		self.rect.y = 50*sin(self.t/20) + self.trucy + self.t
 
 	def DescenteSinusoïdale(self):
@@ -169,7 +176,7 @@ class Enemy(ElementGraphiqueAnimé):
 		Les ennemis descendent en suivant des trajectoires sinusoîdales
 		"""
 		self.t += 1
-		self.rect.x = self.trucx2*cos(self.t/20) + self.trucx2
+		self.rect.x = 200*cos(self.t/20) + 300
 		self.rect.y = self.t
 	
 class Tir(ElementGraphique):
@@ -183,7 +190,7 @@ class Tir(ElementGraphique):
 		self.degats = d
 		self.vie = 1
 
-	def Move(self):
+	def Deplacer(self):
 		"""
 		Fonction qui gère le déplacement des tirs du Perso
 		"""

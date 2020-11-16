@@ -32,24 +32,26 @@ def images(font):
 	imgPerso["Standing"].append(pygame.image.load("./Images/Vaisseaux/Standing.png"))
 
 	bank["perso"] = imgPerso
-	bank["score"] = font.render("Score :", 1, (255, 0, 0)).convert_alpha()
+	bank["score"] = font.render("Score :", 1, (255, 0, 0))
 
 
 	return bank
 
 
-def New_Enemy(img, enemys, largeur, hauteur, fenetre):
+def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
 	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur, "Enemy"))
+	enemys[-1].Choix(i)
 	
-def New_Boss(img, enemys, largeur, hauteur, fenetre):
+def New_Boss(img, enemys, largeur, hauteur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 boss à la liste d'ennemis
 
 	"""	
 	enemys.append(Enemy(largeur//2 -15, -10, img, fenetre, 200, 1, 0, largeur, hauteur, "Boss"))
+	enemys[-1].Choix(i)
 
 def BossTimer(boss):
 	"""
@@ -62,10 +64,14 @@ def BossTimer(boss):
 
 def SupprTrucs(liste):
 	"""
-	docstring
+	Fonction qui supprime les éléments des listes qui ne doivent plus yêtre
 	"""
 	liste_keep = []
 	for element in liste:
 		if element.vie > 0:
 			liste_keep.append(element)
-	return liste_keep
+	x = len(liste) - len(liste_keep)
+	return x, liste_keep
+
+
+	

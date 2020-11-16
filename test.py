@@ -1,11 +1,23 @@
-import matplotlib.pyplot as plt
-import numpy as np
+from random import choice
 
-t = np.linspace(0,1000,num=10000)
+def a():
+    """
+    docstring
+    """
+    print("a")
 
-x = np.cos(t/10)+100
-y = 2*t
+def b():
+    """
+    docstring
+    """
+    print("b")
 
-plt.figure(figsize=(5,5))
-plt.plot(x,y,'r.')
-plt.show()
+def c():
+
+    """
+    docstring
+    """
+    print("c")
+
+
+choice([a, b, c])()

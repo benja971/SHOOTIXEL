@@ -46,32 +46,34 @@ while continuer:
 		fondJeu.Afficher()
 		
 		if time%cooldownEn == 0 and not boss:
-			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre)
+			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
 
 		if time%cooldownBoss == 0:
 			boss = True
-			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre)
+			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
 
 		if len(enemys)>0:
 			boss = BossTimer(enemys[-1])
 
 		for enemy in enemys:
-			enemy.DescenteLinéaire()
+			enemy.Deplacer()
 			enemy.Afficher()
 			enemy.Collisions(perso)
 			for tir in tirsPerso:
 				enemy.Collisions(tir)
 
-		for tir in tirsPerso:
+		for tir in tirsPerso:   
 			tir.Afficher()
-			tir.Move()
+			tir.Deplacer()
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
 		perso.Tir(tirsPerso, bank["tirs"], touches, time)
 
-		enemys = SupprTrucs(enemys)
-		tirsPerso = SupprTrucs(tirsPerso)
+		x, enemys = SupprTrucs(enemys)
+		p, tirsPerso = SupprTrucs(tirsPerso)
+
+		perso.kill += x
 
 		bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 		kill = ElementGraphique(70, 0, bank["kill"], fenetre)
