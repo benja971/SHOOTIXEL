@@ -12,10 +12,15 @@ def images(font):
 	bank["fond"] = pygame.image.load("./Images/fond.jpg")
 	bank["enemys"] = []
 	bank["tirs"] = pygame.image.load("./Images/Tirs/bullet_blue.png")
+<<<<<<< Updated upstream
 	bank["boss"] = []
 
 	# for i in range(1, 23):
 	# 	bank["enemys"].append(pygame.image.load("./Images/Enemy/ennemi" + str(i) + ".png"))
+=======
+	bank["boost"] = pygame.image.load("./Images/boost.png")
+
+>>>>>>> Stashed changes
 
 	bank["enemys"].append(pygame.image.load("./Images/Vaisseaux/Enemy02Red1.png"))
 	bank["boss"].append(pygame.image.load("./Images/Vaisseaux/Enemy01_Red_Frame_1_png_processed.png"))
@@ -43,6 +48,7 @@ def New_Enemy(img, enemys, largeur, hauteur, fenetre, deplacements):
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
 	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur//2, 0), img, fenetre, 15, 2, 20, largeur, hauteur))
+<<<<<<< Updated upstream
 	
 def New_Boss(img, enemys, largeur, hauteur, fenetre, deplacements):
 	"""
@@ -59,3 +65,12 @@ def BossTimer(boss):
 	if boss.vie >= 0 and boss.type == "Boss":
 		return True
 	return False
+=======
+	enemys[-1].ChoixDeplacement()
+
+def New_Bonus(time, tabBonus, bank, fenetre):
+	if time%800 == 0 and len(tabBonus) <= 1:
+		tabBonus.append(Bonus(bank["boost"], fenetre, 0, 0, "speed", time))
+
+		
+>>>>>>> Stashed changes

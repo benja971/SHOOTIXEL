@@ -18,11 +18,16 @@ time = 0
 state = "Jeu"
 enemys = []
 tirsPerso = []
+<<<<<<< Updated upstream
 deplacements = []
 cooldownEn = 40
 cooldownBoss = 1000
 countBoss = 0
 boss = False
+=======
+tabBonus = []
+couldown = 40
+>>>>>>> Stashed changes
 
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
@@ -61,6 +66,12 @@ while continuer:
 			enemy.Collisions(perso)
 			for tir in tirsPerso:
 				enemy.Collisions(tir)
+			
+		for bonus in tabBonus :
+			bonus.Afficher()
+			bonus.Deplacer(largeur, hauteur)
+			bonus.alive(time, tabBonus)
+
 
 		for tir in tirsPerso:
 			tir.Afficher()
