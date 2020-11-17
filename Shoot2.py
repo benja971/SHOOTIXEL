@@ -50,7 +50,6 @@ perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
 
-son_shoot = pygame.mixer.Sound("./Son Effect/1/Laser_Shoot.wav") #provisoire
 # ============= Jeu =============
 
 while continuer:
