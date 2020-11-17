@@ -122,6 +122,15 @@ class Perso(ElementAnimeDir):
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
 
+# Second set game
+
+		if touches[pygame.K_RIGHT] and self.rect.x <= largeur - self.rect.w:
+			self.rect.x += self.vitesse
+			self.direction = "Right"
+
+		if touches[pygame.K_LEFT] and self.rect.x >= 0:
+			self.rect.x -= self.vitesse
+			self.direction = "Left"
 
 	def Tir(self, tirs, img, touches, i):
 		if touches[pygame.K_SPACE] and i%self.cooldown == 0:

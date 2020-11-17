@@ -15,8 +15,27 @@ def images(font):
 	bank["boss"] = []
 	bank["boost"] = pygame.image.load("./Images/boost.png")
 
+
 	# for i in range(1, 23):
 	# 	bank["enemys"].append(pygame.image.load("./Images/Enemy/ennemi" + str(i) + ".png"))
+
+	# ============= Menu =============
+	bank['Main'] = pygame.image.load("./images/Menu/BgM.jpg").convert_alpha()
+	bank['Play'] = pygame.image.load("./Images/Menu/Play.png")
+	bank['Option'] = pygame.image.load("./Images/Menu/Option.png")
+	bank['Exit'] = pygame.image.load("./Images/Menu/Exit.png")
+	bank['Pointeur'] = pygame.image.load("./Images/Menu/Pointeur.png")
+
+	font_menu = pygame.font.Font('Text/Kemco Pixel Bold.ttf', 70)
+	bank["text_menu"] = font_menu.render('SHOOTIXEL', True, (255, 255, 255))
+	# ============= Menu =============
+
+	# ============= Life =============
+	bank['Vie25'] = pygame.image.load("./Images/Life25.png").convert_alpha()
+	bank['Vie50'] = pygame.image.load("./Images/Life50.png").convert_alpha()
+	bank['Vie75'] = pygame.image.load("./Images/Life75.png").convert_alpha()
+	bank['Vie100'] = pygame.image.load("./Images/Life100.png").convert_alpha()
+	# ============= Life =============
 
 	bank["enemys"].append(pygame.image.load("./Images/Vaisseaux/Enemy02Red1.png"))
 	bank["boss"].append(pygame.image.load("./Images/Vaisseaux/Enemy01_Red_Frame_1_png_processed.png"))
@@ -38,6 +57,8 @@ def images(font):
 
 	return bank
 
+
+	
 
 def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	"""
@@ -81,3 +102,45 @@ def SupprTrucs(liste):
 			
 	x = len(liste) - len(liste_keep)
 	return x, liste_keep
+
+def Menu_(select_menu, son_pointeur_menu, touches):
+		#évitons que le pointeur se barre trop loin
+
+	if select_menu >= 4:
+		select_menu = 1
+	if select_menu == 0:
+		select_menu = 3
+
+	if touches[pygame.K_DOWN]:
+		son_pointeur_menu.play()
+		select_menu += 1
+
+	if touches[pygame.K_UP]: 
+		son_pointeur_menu.play()
+		select_menu -= 1
+
+	return select_menu
+
+def move_Pointeur(selection_menu, touches, son_pointeur_menu):
+	"""
+	Fonction qui gère le pointeur du Menu
+	"""
+	
+	#évitons que le pointeur se barre trop loin
+	if selection_menu >= 4:
+		selection_menu = 1
+	if selection_menu == 0:
+		selection_menu = 3
+
+	if touches[pygame.K_DOWN]:
+		son_pointeur_menu.play()
+		selection_menu += 1
+
+	if touches[pygame.K_UP]: 
+		son_pointeur_menu.play()
+		selection_menu -= 1
+
+	return selection_menu
+	
+
+	

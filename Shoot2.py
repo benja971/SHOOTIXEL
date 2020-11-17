@@ -15,7 +15,8 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Jeu"
+state = "Menu"
+selection_menu = 1
 enemys = []
 enemys_keep = []
 tirsPerso = []
@@ -27,9 +28,30 @@ boss = False
 tabBonus = []
 couldown = 40
 
+# ============= Menu =============
+menu_fond = ElementGraphique(0, 0, bank['Main'], fenetre)
+text_presentation = ElementGraphique(largeur / 2 - 240, 50, bank['text_menu'], fenetre)
+play_Bouton = ElementGraphique(largeur / 2 - 75, 150, bank['Play'], fenetre)
+option_Bouton = ElementGraphique(largeur / 2 - 75, 350, bank['Option'], fenetre)
+exit_Bouton = ElementGraphique(largeur / 2 - 75, 550, bank['Exit'], fenetre)
+pointeur1 = ElementGraphique(largeur / 2 - 200 , 150, bank['Pointeur'], fenetre)
+pointeur2 = ElementGraphique(largeur / 2 - 200 , 350, bank['Pointeur'], fenetre)
+pointeur3 = ElementGraphique(largeur / 2 - 200 , 550, bank['Pointeur'], fenetre)
+
+# init son
+son_menu = pygame.mixer.Sound("./Son Effect/Menu/Intro.wav")
+son_pointeur_menu = pygame.mixer.Sound("./Son Effect/Menu/pointeur.wav")
+
+son_menu.play() #Lancement du son_menu hors de la boucle, pour éviter le ralentissement sur le son
+# ============= Menu =============
+
+# ============= Jeu =============
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
+
+son_shoot = pygame.mixer.Sound("./Son Effect/1/Laser_Shoot.wav") #provisoire
+# ============= Jeu =============
 
 while continuer:
 	horloge.tick(60)
@@ -43,10 +65,36 @@ while continuer:
 		if event.type == pygame.QUIT:
 			continuer = False
 
+	if state == "Menu":
+		menu_fond.Afficher()
+		text_presentation.Afficher()
+		play_Bouton.Afficher()
+		option_Bouton.Afficher()
+		exit_Bouton.Afficher()
+		horloge.tick(10) 
+
+		selection_menu = move_Pointeur(selection_menu, touches, son_pointeur_menu)
+
+		if selection_menu == 1:
+			pointeur1.Afficher()
+			if touches[pygame.K_RETURN]:
+				son_menu.stop()
+				state = 'Jeu'
+
+		if selection_menu == 2:
+			pointeur2.Afficher()
+			if touches[pygame.K_RETURN]:
+				state = 'Option'
+
+		if selection_menu == 3:
+			pointeur3.Afficher()
+			if touches[pygame.K_RETURN]:			
+				continuer = False
+
 	if state == "Jeu":
 
 		fondJeu.Afficher()
-		
+
 		New_Bonus(time, tabBonus, bank, fenetre)
 
 		if time%cooldownEn == 0 and not boss:
