@@ -13,7 +13,7 @@ def images(font):
 	bank["enemys"] = []
 	bank["tirs"] = pygame.image.load("./Images/Tirs/bullet_blue.png")
 	bank["boss"] = []
-	bank["boost"] = pygame.image.load("./Images/boost.png")
+	bank["speed"] = pygame.image.load("./Images/Bonus/Powerup_Energy.png")
 
 	# for i in range(1, 23):
 	# 	bank["enemys"].append(pygame.image.load("./Images/Enemy/ennemi" + str(i) + ".png"))
@@ -56,6 +56,10 @@ def New_Boss(img, enemys, largeur, hauteur, fenetre, i):
 	enemys.append(Enemy(largeur//2 -15, -10, img, fenetre, 200, 1, 0, largeur, hauteur, "Boss"))
 	enemys[-1].Choix(i)
 
+def New_Bonus(time, tabBonus, bank, fenetre):
+	if time%100 == 0 and len(tabBonus) < 1:
+		tabBonus.append(Bonus(0, 0, bank["speed"], fenetre, "speed", time, bank))
+
 def BossTimer(boss):
 	"""
 	Fonction qui détermine lorsque le boss est terminé
@@ -63,12 +67,7 @@ def BossTimer(boss):
 	if boss.vie >= 0 and boss.type == "Boss":
 		return True
 	return False
-	enemys[-1].ChoixDeplacement()
-
-def New_Bonus(time, tabBonus, bank, fenetre):
-	if time%200 == 0 and len(tabBonus) <= 1:
-		tabBonus.append(Bonus(bank["boost"], fenetre, 0, 0, "speed", time))
-
+	enemys[-1].Choix()
 
 def SupprTrucs(liste):
 	"""
@@ -78,6 +77,6 @@ def SupprTrucs(liste):
 	for element in liste:
 		if element.vie > 0:
 			liste_keep.append(element)
-			
+
 	x = len(liste) - len(liste_keep)
 	return x, liste_keep

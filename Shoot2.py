@@ -17,14 +17,12 @@ continuer = True
 time = 0
 state = "Jeu"
 enemys = []
-enemys_keep = []
 tirsPerso = []
-tirsPerso_keep = []
+tabBonus = []
 cooldownEn = 40
 cooldownBoss = 1000
 countBoss = 0
 boss = False
-tabBonus = []
 couldown = 40
 
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
@@ -48,6 +46,9 @@ while continuer:
 		fondJeu.Afficher()
 		
 		New_Bonus(time, tabBonus, bank, fenetre)
+
+		if time%250 == 0:
+			cooldownEn -= 1
 
 		if time%cooldownEn == 0 and not boss:
 			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
@@ -75,6 +76,10 @@ while continuer:
 		for tir in tirsPerso:   
 			tir.Afficher()
 			tir.Deplacer()
+			for bonus in tabBonus:
+				bonus.Collisions(tir)
+				bonus.alive(time, tabBonus)
+
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
@@ -82,6 +87,7 @@ while continuer:
 
 		x, enemys = SupprTrucs(enemys)
 		p, tirsPerso = SupprTrucs(tirsPerso)
+		p, tabBonuss = SupprTrucs(tabBonus)
 
 		perso.kill += x
 

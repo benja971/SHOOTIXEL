@@ -1,23 +1,5 @@
-from random import choice
+x= 40
 
-def a():
-    """
-    docstring
-    """
-    print("a")
-
-def b():
-    """
-    docstring
-    """
-    print("b")
-
-def c():
-
-    """
-    docstring
-    """
-    print("c")
-
-
-choice([a, b, c])()
+for i in range(500):
+    print(x)
+    x *= 0.999

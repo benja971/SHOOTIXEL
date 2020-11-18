@@ -33,6 +33,13 @@ class ElementGraphique:
 					other.TakeDamages(self)
 					self.Kill()
 
+			elif self.type == "Bonus":
+				if other.type == "TirPerso":
+					other.Kill()
+					other.pere.Speed()
+					self.Kill()
+
+
 	def TakeDamages(self, other):
 		"""
 		Fonction qui retire de la vie à un élément en cas de collision
@@ -44,13 +51,6 @@ class ElementGraphique:
 		Fonction qui tue un élément
 		"""
 		self.vie = 0
-
-	def Remove(self, list_conscernee):
-		"""
-		Fonction qui supprime les éléments qui n'ont plus lieu d'être
-		"""
-		if self.vie <= 0 and self in list_conscernee:
-			list_conscernee.remove(self)
 
 	def Afficher(self):
 		self.fenetre.blit(self.image, self.rect)
@@ -125,19 +125,17 @@ class Perso(ElementAnimeDir):
 
 	def Tir(self, tirs, img, touches, i):
 		if touches[pygame.K_SPACE] and i%self.cooldown == 0:
-			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15))
-
-	def Bonus(self, bonus):
-		if self.colliderect(bonus):
-			if self.object == 'speed':
-				self.vitesse = 4*2
+			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15, self))
 
 	def Alive(self):
 		if self.vie <= 0:
 			print("Perdu")
 
-
-
+	def Speed(self):
+		"""
+		docstring
+		"""
+		self.vitesse*=2
 
 class Enemy(ElementGraphiqueAnimé):
 	"""
@@ -188,12 +186,13 @@ class Tir(ElementGraphique):
 	"""
 	Tirs du personnage
 	"""
-	def __init__(self, x, y, img, fenetre, v, d):
+	def __init__(self, x, y, img, fenetre, v, d, pere):
 		super().__init__(x, y, img, fenetre)
 		self.type = "TirPerso"
 		self.vitesse = v
 		self.degats = d
 		self.vie = 1
+		self.pere = pere
 
 	def Deplacer(self):
 		"""
@@ -201,14 +200,17 @@ class Tir(ElementGraphique):
 		"""
 		self.rect.y -= self.vitesse
 
+
 class Bonus(ElementGraphique):
-	def __init__(self, x, y, img, fenetre, bonus, time):
-		super(Bonus, self).__init__(img, fenetre, x,y)
+	def __init__(self, x, y, img, fenetre, bonus, time, bank):
+		super(Bonus, self).__init__(x, y, img, fenetre)
 		self.vx = choice([-5, 5])
 		self.vy = choice([-5, 5])
-		self.type = 'bonus'
-		self.object = bonus
+		self.type = 'Bonus'
+		self.typeb = bonus
+		self.vie = 1
 		self.time = time
+		self.image = bank[self.typeb]
 	
 	def Deplacer(self, largeur, hauteur):
 		self.rect.x += self.vx
@@ -224,7 +226,7 @@ class Bonus(ElementGraphique):
 			self.vy = abs(self.vy)
 
 	def alive(self, time, tabBonus):
-		if time - self.time >= 250:
+		if time - self.time >= 150:
 			if self in tabBonus:
-				tabBonus.remove(self)
-		
+				self.vie = 0
+
