@@ -22,14 +22,12 @@ time = 0
 state = "Menu"
 selection_menu = 1
 enemys = []
-enemys_keep = []
 tirsPerso = []
-tirsPerso_keep = []
+tabBonus = []
 cooldownEn = 40
 cooldownBoss = 1000
 countBoss = 0
 boss = False
-tabBonus = []
 couldown = 40
 
 # ============= Menu =============
@@ -100,8 +98,16 @@ while continuer:
 
         New_Bonus(time, tabBonus, bank, fenetre)
 
+<<<<<<< HEAD
         if time % cooldownEn == 0 and not boss:
             New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
+=======
+		if time%250 == 0:
+			cooldownEn -= 1
+
+		if time%cooldownEn == 0 and not boss:
+			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
+>>>>>>> Gameplay
 
         if time % cooldownBoss == 0:
             boss = True
@@ -122,16 +128,32 @@ while continuer:
             bonus.Deplacer(largeur, hauteur)
             bonus.alive(time, tabBonus)
 
+<<<<<<< HEAD
         for tir in tirsPerso:
             tir.Afficher()
             tir.Deplacer()
+=======
+		for tir in tirsPerso:   
+			tir.Afficher()
+			tir.Deplacer()
+			for bonus in tabBonus:
+				bonus.Collisions(tir)
+				bonus.alive(time, tabBonus)
+
+>>>>>>> Gameplay
 
         perso.Afficher()
         perso.Deplacer(touches, largeur)
         perso.Tir(tirsPerso, bank["tirs"], touches, time)
 
+<<<<<<< HEAD
         x, enemys = SupprTrucs(enemys)
         p, tirsPerso = SupprTrucs(tirsPerso)
+=======
+		x, enemys = SupprTrucs(enemys)
+		p, tirsPerso = SupprTrucs(tirsPerso)
+		p, tabBonuss = SupprTrucs(tabBonus)
+>>>>>>> Gameplay
 
         perso.kill += x
 

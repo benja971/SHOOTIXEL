@@ -4,7 +4,36 @@ from random import randint
 from Class import Enemy
 from Class import Bonus
 
+<<<<<<< HEAD
 # from Class import *
+=======
+def images(font):
+	"""
+	Fonction qui recupère les images dans le dossier
+	"""
+	bank = {}
+
+	bank["fond"] = pygame.image.load("./Images/fond.jpg")
+	bank["enemys"] = []
+	bank["tirs"] = pygame.image.load("./Images/Tirs/bullet_blue.png")
+	bank["boss"] = []
+	bank["speed"] = pygame.image.load("./Images/Bonus/Powerup_Energy.png")
+
+	# for i in range(1, 23):
+	# 	bank["enemys"].append(pygame.image.load("./Images/Enemy/ennemi" + str(i) + ".png"))
+
+	bank["enemys"].append(pygame.image.load("./Images/Vaisseaux/Enemy02Red1.png"))
+	bank["boss"].append(pygame.image.load("./Images/Vaisseaux/Enemy01_Red_Frame_1_png_processed.png"))
+
+	imgPerso = {}
+	imgPerso["Right"] = []
+	imgPerso["Left"] = []
+	imgPerso["Standing"] = []
+
+	for i in range(1,3):
+		imgPerso["Right"].append(pygame.image.load("./Images/Vaisseaux/PlayerRight" + str(i) + ".png"))
+		imgPerso["Left"].append(pygame.image.load("./Images/Vaisseaux/PlayerLeft" + str(i) + ".png"))
+>>>>>>> Gameplay
 
 
 def images(font):
@@ -85,7 +114,12 @@ def New_Boss(img, enemys, largeur, hauteur, fenetre, i):
     enemys[-1].Choix(i)
 
 
+def New_Bonus(time, tabBonus, bank, fenetre):
+	if time%100 == 0 and len(tabBonus) < 1:
+		tabBonus.append(Bonus(0, 0, bank["speed"], fenetre, "speed", time, bank))
+
 def BossTimer(boss):
+<<<<<<< HEAD
     """
     Fonction qui détermine lorsque le boss est terminé
     """
@@ -132,3 +166,24 @@ def move_Pointeur(selection_menu, touches, son_pointeur_menu):
         selection_menu -= 1
 
     return selection_menu
+=======
+	"""
+	Fonction qui détermine lorsque le boss est terminé
+	"""
+	if boss.vie >= 0 and boss.type == "Boss":
+		return True
+	return False
+	enemys[-1].Choix()
+
+def SupprTrucs(liste):
+	"""
+	Fonction qui supprime les éléments des listes qui ne doivent plus yêtre
+	"""
+	liste_keep = []
+	for element in liste:
+		if element.vie > 0:
+			liste_keep.append(element)
+
+	x = len(liste) - len(liste_keep)
+	return x, liste_keep
+>>>>>>> Gameplay

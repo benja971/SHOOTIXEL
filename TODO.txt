@@ -72,3 +72,8 @@ Boss
 	=> Beaucoup de dégats
 	=> Fréquence de tir très réduite
 	=> Vitesse très réduite
+
+
+		BONNUS
+Se stockent 
+Utilsablent en appyant sur touche

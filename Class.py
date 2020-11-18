@@ -4,6 +4,7 @@ from math import cos, sin
 
 
 class ElementGraphique:
+<<<<<<< HEAD
     """
     Tout est élément graphique
     """
@@ -56,6 +57,59 @@ class ElementGraphique:
 
     def Afficher(self):
         self.fenetre.blit(self.image, self.rect)
+=======
+	"""
+	Tout est élément graphique
+	"""
+	def __init__(self, x, y, img, fenetre):
+		self.image = img
+		self.rect = self.image.get_rect()
+		self.rect.x = x
+		self.rect.y = y
+		self.fenetre = fenetre
+
+	def Collide(self, other):
+		if self.rect.colliderect(other.rect):
+			return True
+		return False
+
+	def Collisions(self, other):
+		"""
+		Fonction que gère lorsqu'un élément en touche un autre
+		"""
+		if self.Collide(other):
+
+			if self.type == "Enemy" or self.type == "Boss" or self.type == "bonus":
+				if other.type == "TirPerso":
+					self.TakeDamages(other)
+					other.Kill()
+
+				elif other.type == "Perso":
+					other.TakeDamages(self)
+					self.Kill()
+
+			elif self.type == "Bonus":
+				if other.type == "TirPerso":
+					other.Kill()
+					other.pere.Speed()
+					self.Kill()
+
+
+	def TakeDamages(self, other):
+		"""
+		Fonction qui retire de la vie à un élément en cas de collision
+		"""
+		self.vie -= other.degats
+
+	def Kill(self):
+		"""
+		Fonction qui tue un élément
+		"""
+		self.vie = 0
+
+	def Afficher(self):
+		self.fenetre.blit(self.image, self.rect)
+>>>>>>> Gameplay
 
 
 class ElementGraphiqueAnimé(ElementGraphique):
@@ -149,6 +203,7 @@ class Perso(ElementAnimeDir):
             print("Perdu")
 
 
+<<<<<<< HEAD
 class Enemy(ElementGraphiqueAnimé):
     """
     Ennemis animés arrivant en face du personnage
@@ -196,8 +251,14 @@ class Enemy(ElementGraphiqueAnimé):
         self.t += 1
         self.rect.x = 200*cos(self.t/20) + 300
         self.rect.y = self.t
+=======
+	def Tir(self, tirs, img, touches, i):
+		if touches[pygame.K_SPACE] and i%self.cooldown == 0:
+			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15, self))
+>>>>>>> Gameplay
 
 
+<<<<<<< HEAD
 class Tir(ElementGraphique):
     """
     Tirs du personnage
@@ -216,8 +277,80 @@ class Tir(ElementGraphique):
         """
         self.rect.y -= self.vitesse
 
+=======
+	def Speed(self):
+		"""
+		docstring
+		"""
+		self.vitesse*=2
+
+class Enemy(ElementGraphiqueAnimé):
+	"""
+	Ennemis animés arrivant en face du personnage
+	"""
+	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, hauteur, _type):
+		super().__init__(x, y, img, fenetre)
+		self.vie = pv
+		self.vitesse = v
+		self.degats = d
+		self.t = 0
+		self.type = _type
+		self.trucy = randint(-10, 0)
+		self.truc2 = randint(10, largeur - 10)
+		self.Deplacer = self.DescenteLinéaire
+
+	def Choix(self, i):
+		"""
+		"""
+		if 1000 < i < 2500:
+			self.Deplacer = choice([self.DescenteLinéaire, self.DescenteEnCercles])
+		elif 2501 < i:
+			self.Deplacer = choice([self.DescenteLinéaire, self.DescenteEnCercles, self.DescenteSinusoïdale])
+
+	def DescenteLinéaire(self):
+		"""
+		Les ennemis descendent en ligne droite
+		"""
+		self.rect.y += self.vitesse
+
+	def DescenteEnCercles(self):
+		"""
+		Les ennemis descendent en faisant des cercles de tailles différentes
+		"""
+		self.t += 1
+		self.rect.x = 50*cos(self.t/20) + self.truc2
+		self.rect.y = 50*sin(self.t/20) + self.trucy + self.t
+
+	def DescenteSinusoïdale(self):
+		"""
+		Les ennemis descendent en suivant des trajectoires sinusoîdales
+		"""
+		self.t += 1
+		self.rect.x = 200*cos(self.t/20) + 300
+		self.rect.y = self.t
+	
+class Tir(ElementGraphique):
+	"""
+	Tirs du personnage
+	"""
+	def __init__(self, x, y, img, fenetre, v, d, pere):
+		super().__init__(x, y, img, fenetre)
+		self.type = "TirPerso"
+		self.vitesse = v
+		self.degats = d
+		self.vie = 1
+		self.pere = pere
+
+	def Deplacer(self):
+		"""
+		Fonction qui gère le déplacement des tirs du Perso
+		"""
+		self.rect.y -= self.vitesse
+>>>>>>> Gameplay
+
 
 class Bonus(ElementGraphique):
+<<<<<<< HEAD
     def __init__(self, x, y, img, fenetre, bonus, time):
         super(Bonus, self).__init__(img, fenetre, x, y)
         self.vx = choice([-5, 5])
@@ -243,3 +376,33 @@ class Bonus(ElementGraphique):
         if time - self.time >= 250:
             if self in tabBonus:
                 tabBonus.remove(self)
+=======
+	def __init__(self, x, y, img, fenetre, bonus, time, bank):
+		super(Bonus, self).__init__(x, y, img, fenetre)
+		self.vx = choice([-5, 5])
+		self.vy = choice([-5, 5])
+		self.type = 'Bonus'
+		self.typeb = bonus
+		self.vie = 1
+		self.time = time
+		self.image = bank[self.typeb]
+	
+	def Deplacer(self, largeur, hauteur):
+		self.rect.x += self.vx
+		if self.rect.x > largeur - self.rect.w:
+			self.vx = -abs(self.vx)
+		if self.rect.x < 0:
+			self.vx = abs(self.vx)
+
+		self.rect.y += self.vy
+		if self.rect.y > hauteur - self.rect.h :
+			self.vy = -abs(self.vy)
+		if self.rect.y < 0 :
+			self.vy = abs(self.vy)
+
+	def alive(self, time, tabBonus):
+		if time - self.time >= 150:
+			if self in tabBonus:
+				self.vie = 0
+
+>>>>>>> Gameplay
