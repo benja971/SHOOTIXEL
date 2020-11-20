@@ -274,7 +274,6 @@ class Bonus(ElementGraphique):
 		"""
 		docstring
 		"""
-		print(time - self.time)
 		if time - self.time >= 100:
 			if self.name =="speed":
 				perso.normalSpeed()

@@ -108,7 +108,7 @@ while continuer:
 
 		if time % cooldownBoss == 0:
 			pass
-			# boss = True
+			boss = True
 			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
 
 		if len(enemys) > 0:

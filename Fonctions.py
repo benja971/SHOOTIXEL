@@ -93,7 +93,7 @@ def BossTimer(boss):
 
 
 def New_Bonus(tabBonus, bank, fenetre, largeur, time):
-	# t = choice(["speed", "shield", "heal", "damages", "cooldown"])
+	t = choice(["speed", "shield", "heal", "damages", "cooldown"])
 	tabBonus.append(Bonus(randint(0, largeur), randint(-20, -5), bank["speed"], fenetre, "speed", time))
 
 
