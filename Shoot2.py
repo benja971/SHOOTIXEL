@@ -19,7 +19,7 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Menu"
+state = "Jeu"
 selection_menu = 1
 enemys = []
 tirsPerso = []
@@ -40,11 +40,11 @@ pointeur1 = ElementGraphique(largeur / 2 - 200, 150, bank['Pointeur'], fenetre)
 pointeur2 = ElementGraphique(largeur / 2 - 200, 350, bank['Pointeur'], fenetre)
 pointeur3 = ElementGraphique(largeur / 2 - 200, 550, bank['Pointeur'], fenetre)
 
-# init son
+# ============= Son Menu =============
 son_menu = pygame.mixer.Sound("./Son Effect/Menu/Intro.wav")
 son_pointeur_menu = pygame.mixer.Sound("./Son Effect/Menu/pointeur.wav")
-
 son_menu.play()  # Lancement du son_menu hors de la boucle, pour éviter le ralentissement sur le son
+# ============= Son Menu =============
 # ============= Menu =============
 
 # ============= Jeu =============
@@ -55,113 +55,104 @@ score = ElementGraphique(0, 0, bank["score"], fenetre)
 # ============= Jeu =============
 
 while continuer:
-    horloge.tick(60)
-    time += 1
-    touches = pygame.key.get_pressed()
+	horloge.tick(60)
+	time += 1
+	touches = pygame.key.get_pressed()
 
-    if touches[pygame.K_ESCAPE]:
-        continuer = False
+	if touches[pygame.K_ESCAPE]:
+		continuer = False
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            continuer = False
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			continuer = False
 
-    if state == "Menu":
-        menu_fond.Afficher()
-        text_presentation.Afficher()
-        play_Bouton.Afficher()
-        option_Bouton.Afficher()
-        exit_Bouton.Afficher()
-        horloge.tick(10)
+	if state == "Menu":
+		menu_fond.Afficher()
+		text_presentation.Afficher()
+		play_Bouton.Afficher()
+		option_Bouton.Afficher()
+		exit_Bouton.Afficher()
+		horloge.tick(10)
 
-        selection_menu = move_Pointeur(selection_menu, touches, son_pointeur_menu)
+		selection_menu = move_Pointeur(selection_menu, touches, son_pointeur_menu)
 
-        if selection_menu == 1:
-            pointeur1.Afficher()
-            if touches[pygame.K_RETURN]:
-                son_menu.stop()
-                state = 'Jeu'
+		if selection_menu == 1:
+			pointeur1.Afficher()
+			if touches[pygame.K_RETURN]:
+				son_menu.stop()
+				state = 'Jeu'
 
-        if selection_menu == 2:
-            pointeur2.Afficher()
-            if touches[pygame.K_RETURN]:
-                state = 'Option'
+		if selection_menu == 2:
+			pointeur2.Afficher()
+			if touches[pygame.K_RETURN]:
+				state = 'Option'
 
-        if selection_menu == 3:
-            pointeur3.Afficher()
-            if touches[pygame.K_RETURN]:
-                continuer = False
+		if selection_menu == 3:
+			pointeur3.Afficher()
+			if touches[pygame.K_RETURN]:
+				continuer = False
 
-    if state == "Jeu":
+	if state == "Jeu":
 
-        fondJeu.Afficher()
+		fondJeu.Afficher()
 
-        New_Bonus(time, tabBonus, bank, fenetre)
+		if time % 100 == 0 and len(tabBonus) <= 1:
+			New_Bonus(tabBonus, bank, fenetre, largeur, time)
 
-<<<<<<< HEAD
-        if time % cooldownEn == 0 and not boss:
-            New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
-=======
 		if time%250 == 0:
 			cooldownEn -= 1
 
 		if time%cooldownEn == 0 and not boss:
-			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
->>>>>>> Gameplay
+			pass
+			# New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
 
-        if time % cooldownBoss == 0:
-            boss = True
-            New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
+		if time % cooldownBoss == 0:
+			pass
+			# boss = True
+			# New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
 
-        if len(enemys) > 0:
-            boss = BossTimer(enemys[-1])
+		if len(enemys) > 0:
+			boss = BossTimer(enemys[-1])
 
-        for enemy in enemys:
-            enemy.Deplacer()
-            enemy.Afficher()
-            enemy.Collisions(perso)
-            for tir in tirsPerso:
-                enemy.Collisions(tir)
+		for enemy in enemys:
+			enemy.Deplacer()
+			enemy.Afficher()
+			enemy.Collisions(perso, perso, time)
+			for tir in tirsPerso:
+				enemy.Collisions(tir)
 
-        for bonus in tabBonus:
-            bonus.Afficher()
-            bonus.Deplacer(largeur, hauteur)
-            bonus.alive(time, tabBonus)
-
-<<<<<<< HEAD
-        for tir in tirsPerso:
-            tir.Afficher()
-            tir.Deplacer()
-=======
-		for tir in tirsPerso:   
+		for bonus in tabBonus:
+			bonus.Afficher()
+			bonus.Deplacer(largeur, hauteur)
+			bonus.alive(time, tabBonus)
+			bonus.resetBonus(perso, time)
+			
+		for tir in tirsPerso:
 			tir.Afficher()
 			tir.Deplacer()
 			for bonus in tabBonus:
-				bonus.Collisions(tir)
-				bonus.alive(time, tabBonus)
+				bonus.Collisions(tir, perso, time)
 
->>>>>>> Gameplay
+		perso.Afficher()
+		perso.Deplacer(touches, largeur)
+		perso.Tir(tirsPerso, bank["tirs"], touches, time)
 
-        perso.Afficher()
-        perso.Deplacer(touches, largeur)
-        perso.Tir(tirsPerso, bank["tirs"], touches, time)
-
-<<<<<<< HEAD
-        x, enemys = SupprTrucs(enemys)
-        p, tirsPerso = SupprTrucs(tirsPerso)
-=======
 		x, enemys = SupprTrucs(enemys)
 		p, tirsPerso = SupprTrucs(tirsPerso)
-		p, tabBonuss = SupprTrucs(tabBonus)
->>>>>>> Gameplay
+		p, tabBonus = SupprTrucs(tabBonus)
 
-        perso.kill += x
+		perso.kill += x
 
-        bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
-        kill = ElementGraphique(70, 0, bank["kill"], fenetre)
-        score.Afficher()
-        kill.Afficher()
+		bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
+		kill = ElementGraphique(70, 0, bank["kill"], fenetre)
 
-    pygame.display.update()
+		bank["v"] = font.render(str(perso.vitesse), 1, (255, 0, 0)).convert_alpha()
+		v = ElementGraphique(70, 50, bank["v"], fenetre)
+
+		score.Afficher()
+		kill.Afficher()
+		v.Afficher()
+
+	pygame.display.update()
 
 pygame.quit()
