@@ -19,7 +19,7 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Jeu"
+state = "Menu"
 selection_menu = 1
 enemys = []
 tirsPerso = []
@@ -52,6 +52,7 @@ perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
 
+tir_son = pygame.mixer.Sound("./son Effect/1/Laser_Shoot.wav")
 # ============= Jeu =============
 
 while continuer:
@@ -135,7 +136,7 @@ while continuer:
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
-		perso.Tir(tirsPerso, bank["tirs"], touches, time)
+		perso.Tir(tirsPerso, bank["tirs"], touches, time, tir_son)
 
 		x, enemys = SupprTrucs(enemys)
 		p, tirsPerso = SupprTrucs(tirsPerso)
