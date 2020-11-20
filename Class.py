@@ -145,10 +145,11 @@ class Perso(ElementAnimeDir):
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
 
-	def Tir(self, tirs, img, touches, i):
+	def Tir(self, tirs, img, touches, i, son_tir):
 		if touches[pygame.K_SPACE] and i % self.cooldown == 0:
-			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2,
-							self.rect.y - 30, img, self.fenetre, 5, 15, self))
+			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15, self))
+			son_tir.play()
+
 
 	def Alive(self):
 		if self.vie <= 0:
