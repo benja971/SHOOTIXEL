@@ -104,12 +104,12 @@ while continuer:
 
 		if time%cooldownEn == 0 and not boss:
 			pass
-			# New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
+			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
 
 		if time % cooldownBoss == 0:
 			pass
 			# boss = True
-			# New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
+			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
 
 		if len(enemys) > 0:
 			boss = BossTimer(enemys[-1])
