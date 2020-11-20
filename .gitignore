@@ -1,3 +1,4 @@
 .vscode/settings.json
 __pycache__/Fonctions.cpython-37.pyc
 __pycache__/Class.cpython-37.pyc
+.DS_Store
