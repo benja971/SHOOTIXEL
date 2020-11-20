@@ -27,7 +27,7 @@ class ElementGraphique:
 		if self.Collide(other):
 
 			if self.type == "Enemy" or self.type == "Boss":
-				if other.type == "TirPerso":
+				if other.type == "TirPerso" and not other.pere.godMod:
 					self.TakeDamages(other)
 					other.Kill()
 
@@ -39,7 +39,7 @@ class ElementGraphique:
 				if other.type == "TirPerso":
 					other.Kill()
 					self.Kill()
-					self.apllyBonus(perso, time)
+					self.apllyBonus(perso, time, other)
 
 	def TakeDamages(self, other):
 		"""
@@ -118,6 +118,10 @@ class Perso(ElementAnimeDir):
 		self.cooldown = 20
 		self.money = 0
 		self.kill = 0
+		self.speed = False
+		self.invinsible = False
+		self.plusVie = False
+		self.boost = False
 
 	def Deplacer(self, touches, largeur):
 		self.direction = "Standing"
@@ -151,10 +155,26 @@ class Perso(ElementAnimeDir):
 			print("Perdu")
 
 	def speedUp(self):
-		self.vitesse = 8
+		for i in range(4):
+			self.vitesse += 1
+		self.speed = True
+
+	def godMod(self):
+		"""
+		docstring
+		"""
+		self.invinsible = True
+
+	def heal(self):
+		self.vie += 10
 
 	def normalSpeed(self):
-		self.vitesse = 4
+		for i in range(4):
+			self.vitesse -= 1
+		self.speed = False
+
+	def norlaMod(self):
+		self.invinsible = False
 
 class Enemy(ElementGraphiqueAnimé):
 	"""
@@ -174,7 +194,7 @@ class Enemy(ElementGraphiqueAnimé):
 
 	def Choix(self, i):
 		"""
-		Tirs
+		Déplacements
 		"""
 		if 1000 < i < 2500:
 			self.Deplacer = choice(
@@ -225,6 +245,15 @@ class Tir(ElementGraphique):
 		"""
 		self.rect.y -= self.vitesse
 
+	def normalDamages(self):
+		for i in range(5):
+			self.degats -= 1
+		self.pere.damagesUp = False
+
+	def damagesUp(self):
+		for i in range(5):
+			self.degats += 1
+		self.pere.damagesUp = True
 
 class Bonus(ElementGraphique):
 	def __init__(self, x, y, img, fenetre, t, time):
@@ -234,7 +263,8 @@ class Bonus(ElementGraphique):
 		self.type = 'Bonus'
 		self.name = t
 		self.vie = 1
-		self.time = time
+		self.apparition = time
+		self.debBonus = 0
 
 	def Deplacer(self, largeur, hauteur):
 		self.rect.x += self.vx
@@ -250,38 +280,35 @@ class Bonus(ElementGraphique):
 			self.vy = abs(self.vy)
 
 	def alive(self, time, tabBonus):
-		if time - self.time >= 250:
+		if time - self.apparition >= 250:
 			self.Kill() 
 
-	def apllyBonus(self, perso, time):
+	def apllyBonus(self, perso, time, tir):
 		"""
-		docstring
 		"""
-		
 		if self.name =="speed":
+			self.debBonus = time
 			perso.speedUp()
 		if self.name =="shield":
-			pass
+			perso.godMod()
 		if self.name =="damages":
-			pass
+			tir.damagesUp()
 		if self.name =="cooldown":
 			pass
 		if self.name =="heal":
-			pass
+			perso.heal()
 
 	def resetBonus(self, perso, time):
 		"""
-		docstring
 		"""
-		if time - self.time >= 100:
-			if self.name =="speed":
+		if time - self.debBonus >= 100:
+			if self.name =="speed" and perso.speed:
 				perso.normalSpeed()
-			if self.name =="shield":
-				pass
+			if self.name =="shield" and perso.godMod:
+				perso.norlaMod()
 			if self.name =="damages":
 				pass
 			if self.name =="cooldown":
 				pass
 			if self.name =="heal":
 				pass
-

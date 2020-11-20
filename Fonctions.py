@@ -94,7 +94,7 @@ def BossTimer(boss):
 
 def New_Bonus(tabBonus, bank, fenetre, largeur, time):
 	t = choice(["speed", "shield", "heal", "damages", "cooldown"])
-	tabBonus.append(Bonus(randint(0, largeur), randint(-20, -5), bank["speed"], fenetre, "speed", time))
+	tabBonus.append(Bonus(randint(0, largeur), randint(-20, -5), bank[t], fenetre, "damages", time))
 
 
 def SupprTrucs(liste):
@@ -113,7 +113,6 @@ def move_Pointeur(selection_menu, touches, son_pointeur_menu):
 	"""
 	Fonction qui gère le pointeur du Menu
 	"""
-
 	# évitons que le pointeur se barre trop loin
 	if selection_menu >= 4:
 		selection_menu = 1

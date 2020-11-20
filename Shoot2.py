@@ -96,20 +96,18 @@ while continuer:
 
 		fondJeu.Afficher()
 
-		if time % 100 == 0 and len(tabBonus) <= 1:
+		if time % 333 == 0 and len(tabBonus) <= 1:
 			New_Bonus(tabBonus, bank, fenetre, largeur, time)
 
 		if time%250 == 0:
 			cooldownEn -= 1
 
-		if time%cooldownEn == 0 and not boss:
-			pass
-			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
+		# if time%cooldownEn == 0 and not boss:
+		# 	New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
 
-		if time % cooldownBoss == 0:
-			pass
-			boss = True
-			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
+		# if time % cooldownBoss == 0:
+		# 	boss = True
+		# 	New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
 
 		if len(enemys) > 0:
 			boss = BossTimer(enemys[-1])
@@ -128,6 +126,7 @@ while continuer:
 			bonus.resetBonus(perso, time)
 			
 		for tir in tirsPerso:
+			print(tir.degats)
 			tir.Afficher()
 			tir.Deplacer()
 			for bonus in tabBonus:
@@ -147,11 +146,19 @@ while continuer:
 		kill = ElementGraphique(70, 0, bank["kill"], fenetre)
 
 		bank["v"] = font.render(str(perso.vitesse), 1, (255, 0, 0)).convert_alpha()
-		v = ElementGraphique(70, 50, bank["v"], fenetre)
+		v = ElementGraphique(70, 30, bank["v"], fenetre)
+
+		bank["g"] = font.render(str(perso.invinsible), 1, (255, 0, 0)).convert_alpha()
+		g = ElementGraphique(70, 60, bank["g"], fenetre)
+
+		bank["h"] = font.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
+		h = ElementGraphique(70, 90, bank["h"], fenetre)
 
 		score.Afficher()
 		kill.Afficher()
 		v.Afficher()
+		g.Afficher()
+		h.Afficher()
 
 	pygame.display.update()
 
