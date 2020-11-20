@@ -38,7 +38,6 @@ class ElementGraphique:
 			elif self.type == "Bonus":
 				if other.type == "TirPerso":
 					other.Kill()
-					other.pere.speedUp()
 					self.Kill()
 					self.apllyBonus(perso, time)
 
@@ -155,7 +154,7 @@ class Perso(ElementAnimeDir):
 		self.vitesse = 8
 
 	def normalSpeed(self):
-		self.vitesse = 8
+		self.vitesse = 4
 
 class Enemy(ElementGraphiqueAnimé):
 	"""

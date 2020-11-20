@@ -119,7 +119,7 @@ while continuer:
 			enemy.Afficher()
 			enemy.Collisions(perso, perso, time)
 			for tir in tirsPerso:
-				enemy.Collisions(tir)
+				enemy.Collisions(tir, perso, time)
 
 		for bonus in tabBonus:
 			bonus.Afficher()
