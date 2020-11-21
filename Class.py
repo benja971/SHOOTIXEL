@@ -26,20 +26,21 @@ class ElementGraphique:
 		"""
 		if self.Collide(other):
 
-			if self.type == "Enemy" or self.type == "Boss":
-				if other.type == "TirPerso" and not other.pere.godMod:
+			if self.object == "Enemy" or self.object == "Boss":
+				if other.object == "TirPerso":
 					self.TakeDamages(other)
 					other.Kill()
 
-				elif other.type == "Perso":
-					other.TakeDamages(self)
+				elif other.object == "Perso" :
 					self.Kill()
+					if other.invinsible == False:
+						other.TakeDamages(self)
 
-			elif self.type == "Bonus":
-				if other.type == "TirPerso":
+			if self.object == "Bonus":
+				if other.object == "TirPerso":
 					other.Kill()
 					self.Kill()
-					self.apllyBonus(perso, time, other)
+					self.apllyBonus(perso, time)
 
 	def TakeDamages(self, other):
 		"""
@@ -110,7 +111,7 @@ class Perso(ElementAnimeDir):
 
 	def __init__(self, x, y, images_all_dir, fenetre, largeur, hauteur):
 		super().__init__(x, y, images_all_dir, fenetre)
-		self.type = "Perso"
+		self.object = "Perso"
 		self.rect.x = largeur // 2 - self.rect.w // 2
 		self.rect.y = hauteur - self.rect.h - 20
 		self.vie = 100
@@ -118,10 +119,12 @@ class Perso(ElementAnimeDir):
 		self.cooldown = 20
 		self.money = 0
 		self.kill = 0
+		self.boosted = False
 		self.speed = False
 		self.invinsible = False
 		self.plusVie = False
-		self.boost = False
+		self.plusdamges = False
+		self.bcooldown = False
 
 	def Deplacer(self, touches, largeur):
 		self.direction = "Standing"
@@ -152,43 +155,67 @@ class Perso(ElementAnimeDir):
 
 
 	def Alive(self):
+		"""
+		"""
 		if self.vie <= 0:
 			print("Perdu")
 
 	def speedUp(self):
-		for i in range(4):
-			self.vitesse += 1
+		"""
+		"""
+		self.vitesse += 4
 		self.speed = True
 
 	def godMod(self):
 		"""
-		docstring
 		"""
 		self.invinsible = True
 
 	def heal(self):
+		"""
+		"""
 		self.vie += 10
 
 	def normalSpeed(self):
-		for i in range(4):
-			self.vitesse -= 1
+		"""
+		"""
+		self.vitesse -= 4
 		self.speed = False
 
-	def norlaMod(self):
+	def normalMod(self):
+		"""
+		"""
 		self.invinsible = False
+
+	def mitraille(self):
+		"""
+		"""
+		if self.boosted == False:
+			self.boosted = True
+			self.cooldown /=2
+			self.bcooldown = True
+
+	def noMitraille(self):
+		"""
+		"""
+		if self.boosted == True:
+			self.boosted = False
+			self.cooldown *=2
+			self.bcooldown = False
+
 
 class Enemy(ElementGraphiqueAnimé):
 	"""
 	Ennemis animés arrivant en face du personnage
 	"""
 
-	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, hauteur, _type):
+	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, _type):
 		super().__init__(x, y, img, fenetre)
 		self.vie = pv
 		self.vitesse = v
 		self.degats = d
 		self.t = 0
-		self.type = _type
+		self.object = _type
 		self.trucy = randint(-10, 0)
 		self.truc2 = randint(10, largeur - 10)
 		self.Deplacer = self.DescenteLinéaire
@@ -234,11 +261,12 @@ class Tir(ElementGraphique):
 
 	def __init__(self, x, y, img, fenetre, v, d, pere):
 		super().__init__(x, y, img, fenetre)
-		self.type = "TirPerso"
+		self.object = "TirPerso"
 		self.vitesse = v
 		self.degats = d
 		self.vie = 1
 		self.pere = pere
+		self.boosted = False
 
 	def Deplacer(self):
 		"""
@@ -247,21 +275,23 @@ class Tir(ElementGraphique):
 		self.rect.y -= self.vitesse
 
 	def normalDamages(self):
-		for i in range(5):
-			self.degats -= 1
-		self.pere.damagesUp = False
+		if self.boosted == True:
+			self.pere.plusdamges = False
+			self.boosted = False
+			self.degats = 15
 
 	def damagesUp(self):
-		for i in range(5):
-			self.degats += 1
-		self.pere.damagesUp = True
+		if self.boosted == False:
+			self.boosted = True
+			self.pere.plusdamges = True
+			self.degats += 5
 
 class Bonus(ElementGraphique):
 	def __init__(self, x, y, img, fenetre, t, time):
 		super(Bonus, self).__init__(x, y, img, fenetre)
 		self.vx = choice([-5, 5])
 		self.vy = choice([-5, 5])
-		self.type = 'Bonus'
+		self.object = "Bonus"
 		self.name = t
 		self.vie = 1
 		self.apparition = time
@@ -284,18 +314,18 @@ class Bonus(ElementGraphique):
 		if time - self.apparition >= 250:
 			self.Kill() 
 
-	def apllyBonus(self, perso, time, tir):
+	def apllyBonus(self, perso, time):
 		"""
 		"""
+		self.debBonus = time
 		if self.name =="speed":
-			self.debBonus = time
 			perso.speedUp()
 		if self.name =="shield":
 			perso.godMod()
-		if self.name =="damages":
-			tir.damagesUp()
 		if self.name =="cooldown":
-			pass
+			perso.mitraille()
+		if self.name =="damages":
+			perso.plusdamges = True
 		if self.name =="heal":
 			perso.heal()
 
@@ -306,10 +336,7 @@ class Bonus(ElementGraphique):
 			if self.name =="speed" and perso.speed:
 				perso.normalSpeed()
 			if self.name =="shield" and perso.godMod:
-				perso.norlaMod()
-			if self.name =="damages":
-				pass
+				perso.normalMod()
 			if self.name =="cooldown":
-				pass
-			if self.name =="heal":
-				pass
+				perso.noMitraille()
+

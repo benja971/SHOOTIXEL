@@ -70,7 +70,7 @@ def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
 
-	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 15, 2, 20, largeur, hauteur, "Enemy"))
+	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 15, 2, 20, largeur, "Enemy"))
 	enemys[-1].Choix(i)
 
 
@@ -87,14 +87,14 @@ def BossTimer(boss):
 	"""
 	Fonction qui détermine lorsque le boss est terminé
 	"""
-	if boss.vie >= 0 and boss.type == "Boss":
+	if boss.vie >= 0 and boss.object == "Boss":
 		return True
 	return False
 
 
 def New_Bonus(tabBonus, bank, fenetre, largeur, time):
 	t = choice(["speed", "shield", "heal", "damages", "cooldown"])
-	tabBonus.append(Bonus(randint(0, largeur), randint(-20, -5), bank[t], fenetre, "damages", time))
+	tabBonus.append(Bonus(randint(0, largeur), randint(-20, -5), bank[t], fenetre, t, time))
 
 
 def SupprTrucs(liste):

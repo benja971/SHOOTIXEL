@@ -19,7 +19,7 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Menu"
+state = "Jeu"
 selection_menu = 1
 enemys = []
 tirsPerso = []
@@ -97,18 +97,18 @@ while continuer:
 
 		fondJeu.Afficher()
 
-		if time % 333 == 0 and len(tabBonus) <= 1:
+		if time % 150 == 0 and len(tabBonus) <= 1:
 			New_Bonus(tabBonus, bank, fenetre, largeur, time)
 
 		if time%250 == 0:
 			cooldownEn -= 1
 
-		# if time%cooldownEn == 0 and not boss:
-		# 	New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
+		if time%cooldownEn == 0 and not boss:
+			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
 
-		# if time % cooldownBoss == 0:
-		# 	boss = True
-		# 	New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
+		if time % cooldownBoss == 0:
+			boss = True
+			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
 
 		if len(enemys) > 0:
 			boss = BossTimer(enemys[-1])
@@ -124,14 +124,22 @@ while continuer:
 			bonus.Afficher()
 			bonus.Deplacer(largeur, hauteur)
 			bonus.alive(time, tabBonus)
-			bonus.resetBonus(perso, time)
-			
+
 		for tir in tirsPerso:
-			print(tir.degats)
+			bank["d"] = font.render(str(tir.degats), 1, (255, 0, 0)).convert_alpha()
+			d = ElementGraphique(70, 120, bank["d"], fenetre)
+			d.Afficher()
+
+			if perso.plusdamges:
+				tir.damagesUp()
+			else:      
+				tir.normalDamages()
+
 			tir.Afficher()
 			tir.Deplacer()
 			for bonus in tabBonus:
 				bonus.Collisions(tir, perso, time)
+				bonus.resetBonus(perso, time)
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
@@ -143,8 +151,10 @@ while continuer:
 
 		perso.kill += x
 
-		bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
-		kill = ElementGraphique(70, 0, bank["kill"], fenetre)
+		if perso.kill >0:
+			bank["kill"] = font.render(str(time/perso.kill), 1, (255, 0, 0)).convert_alpha()
+			kill = ElementGraphique(70, 0, bank["kill"], fenetre)
+			kill.Afficher()
 
 		bank["v"] = font.render(str(perso.vitesse), 1, (255, 0, 0)).convert_alpha()
 		v = ElementGraphique(70, 30, bank["v"], fenetre)
@@ -155,11 +165,17 @@ while continuer:
 		bank["h"] = font.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
 		h = ElementGraphique(70, 90, bank["h"], fenetre)
 
+		bank["c"] = font.render(str(perso.cooldown), 1, (255, 0, 0)).convert_alpha()
+		c = ElementGraphique(70, 150, bank["c"], fenetre)
+
+
+
 		score.Afficher()
-		kill.Afficher()
+		
 		v.Afficher()
 		g.Afficher()
 		h.Afficher()
+		c.Afficher()
 
 	pygame.display.update()
 
