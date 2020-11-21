@@ -1,6 +1,5 @@
 import pygame
 from random import randint, choice
-
 from Class import Enemy
 from Class import Bonus
 
@@ -70,7 +69,7 @@ def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
 
-	enemys.append(Enemy(randint(50, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 15, 2, 20, largeur, "Enemy"))
+	enemys.append(Enemy(randint(200, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 15, 2, 20, largeur, "Enemy"))
 	enemys[-1].Choix(i)
 
 
@@ -78,8 +77,8 @@ def New_Boss(img, enemys, largeur, hauteur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 boss à la liste d'ennemis
 	"""
-	enemys.append(Enemy(largeur//2 - 15, -10, img, fenetre,
-						200, 1, 0, largeur, hauteur, "Boss"))
+	enemys.append(Enemy(largeur//2 + 150 - 15, -10, img, fenetre,
+						200, 1, 0, largeur, "Boss"))
 	enemys[-1].Choix(i)
 
 
@@ -94,7 +93,7 @@ def BossTimer(boss):
 
 def New_Bonus(tabBonus, bank, fenetre, largeur, time):
 	t = choice(["speed", "shield", "heal", "damages", "cooldown"])
-	tabBonus.append(Bonus(randint(0, largeur), randint(-20, -5), bank[t], fenetre, t, time))
+	tabBonus.append(Bonus(randint(150, largeur), randint(-20, -5), bank[t], fenetre, t, time))
 
 
 def SupprTrucs(liste):

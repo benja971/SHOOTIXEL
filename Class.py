@@ -134,7 +134,7 @@ class Perso(ElementAnimeDir):
 			self.rect.x += self.vitesse
 			self.direction = "Right"
 
-		if touches[pygame.K_a] and self.rect.x >= 0:
+		if touches[pygame.K_a] and self.rect.x >= 150:
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
 
@@ -144,7 +144,7 @@ class Perso(ElementAnimeDir):
 			self.rect.x += self.vitesse
 			self.direction = "Right"
 
-		if touches[pygame.K_LEFT] and self.rect.x >= 0:
+		if touches[pygame.K_LEFT] and self.rect.x >= 150:
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
 
@@ -301,16 +301,16 @@ class Bonus(ElementGraphique):
 		self.rect.x += self.vx
 		if self.rect.x > largeur - self.rect.w:
 			self.vx = -abs(self.vx)
-		if self.rect.x < 0:
+		if self.rect.x < 150:
 			self.vx = abs(self.vx)
 
 		self.rect.y += self.vy
 		if self.rect.y > hauteur - self.rect.h:
 			self.vy = -abs(self.vy)
-		if self.rect.y < 0:
+		if self.rect.y < 150:
 			self.vy = abs(self.vy)
 
-	def alive(self, time, tabBonus):
+	def alive(self, time):
 		if time - self.apparition >= 250:
 			self.Kill() 
 

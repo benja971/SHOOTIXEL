@@ -1,14 +1,12 @@
 import pygame
-# from Class import * || Mauvaise idée...  rend le débogage plus difficile car il embrombre l'espace des noms local, peux également entrainer des conflit avec les noms définie localement et (surtout) réduit la lisibilité, en important tout on ne sais pas concrétement ce qui est utilisé ou non ...
 from Class import ElementGraphique
 from Class import Perso 
-
 from Fonctions import * 
 
 
 pygame.init()
 
-largeur, hauteur = 600, 700
+largeur, hauteur = 750, 800
 fenetre = pygame.display.set_mode((largeur, hauteur))
 font = pygame.font.Font(None, 30)
 
@@ -49,7 +47,7 @@ son_menu.play()  # Lancement du son_menu hors de la boucle, pour éviter le rale
 
 # ============= Jeu =============
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
-fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
+fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
 
 tir_son = pygame.mixer.Sound("./son Effect/1/Laser_Shoot.wav")
@@ -123,7 +121,7 @@ while continuer:
 		for bonus in tabBonus:
 			bonus.Afficher()
 			bonus.Deplacer(largeur, hauteur)
-			bonus.alive(time, tabBonus)
+			bonus.alive(time)
 
 		for tir in tirsPerso:
 			bank["d"] = font.render(str(tir.degats), 1, (255, 0, 0)).convert_alpha()
