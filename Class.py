@@ -60,6 +60,8 @@ class ElementGraphique:
 		"""
 		if self.vie <= 0 and self in list_conscernee:
 			list_conscernee.remove(self)
+			if self.object == "Boss":
+				return False
 
 	def Afficher(self):
 		self.fenetre.blit(self.image, self.rect)
@@ -114,9 +116,10 @@ class Perso(ElementAnimeDir):
 		self.object = "Perso"
 		self.rect.x = largeur // 2 - self.rect.w // 2
 		self.rect.y = hauteur - self.rect.h - 20
+		self.tirs = []
 		self.vie = 100
 		self.vitesse = 4
-		self.cooldown = 20
+		self.cooldown = 40
 		self.money = 0
 		self.kill = 0
 		self.boosted = False
@@ -148,9 +151,9 @@ class Perso(ElementAnimeDir):
 			self.rect.x -= self.vitesse
 			self.direction = "Left"
 
-	def Tir(self, tirs, img, touches, i, son_tir):
+	def Tir(self, img, touches, i, son_tir):
 		if touches[pygame.K_SPACE] and i % self.cooldown == 0:
-			tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15, self))
+			self.tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15, self, "TirPerso"))
 			son_tir.play()
 
 
@@ -209,16 +212,19 @@ class Enemy(ElementGraphiqueAnimé):
 	Ennemis animés arrivant en face du personnage
 	"""
 
-	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, _type):
+	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, objext, ptir):
 		super().__init__(x, y, img, fenetre)
 		self.vie = pv
 		self.vitesse = v
 		self.degats = d
 		self.t = 0
-		self.object = _type
+		self.object = objext
 		self.trucy = randint(-10, 0)
-		self.truc2 = randint(10, largeur - 10)
+		self.truc2 = randint(200, largeur - 50)
 		self.Deplacer = self.DescenteLinéaire
+		self.cooldown = 100
+		self.peutire = ptir
+		self.tirs = []
 
 	def Choix(self, i):
 		"""
@@ -253,15 +259,26 @@ class Enemy(ElementGraphiqueAnimé):
 		self.rect.x = 200*cos(self.t/20) + 300
 		self.rect.y = self.t
 
+	def tir(self, img, fenetre, i):
+		"""
+		"""
+		if self.peutire and i%self.cooldown == 0:
+			self.tirs.append(Tir(self.rect.x + self.rect.w//2, self.rect.y + self.rect.h + 10, img, fenetre, -5, 15, self, "TirEnnemy"))
 
-class Tir(ElementGraphique):
-	"""
-	Tirs du personnage
-	"""
+	def deplacerAfficherTirs(self):
+		"""
+		"""
+		for tir in self.tirs:
+			tir.Deplacer()
+			tir.Afficher()
 
-	def __init__(self, x, y, img, fenetre, v, d, pere):
+class Tir(ElementGraphiqueAnimé):
+	"""
+	Tirs
+	"""
+	def __init__(self, x, y, img, fenetre, v, d, pere, o):
 		super().__init__(x, y, img, fenetre)
-		self.object = "TirPerso"
+		self.object = o
 		self.vitesse = v
 		self.degats = d
 		self.vie = 1

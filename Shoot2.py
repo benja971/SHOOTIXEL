@@ -20,7 +20,6 @@ time = 0
 state = "Jeu"
 selection_menu = 1
 enemys = []
-tirsPerso = []
 tabBonus = []
 cooldownEn = 40
 cooldownBoss = 1000
@@ -49,8 +48,8 @@ son_menu.play()  # Lancement du son_menu hors de la boucle, pour éviter le rale
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
-
 tir_son = pygame.mixer.Sound("./son Effect/1/Laser_Shoot.wav")
+BLACK = (0, 0, 0)
 # ============= Jeu =============
 
 while continuer:
@@ -93,9 +92,11 @@ while continuer:
 
 	if state == "Jeu":
 
+		fenetre.fill(BLACK)
 		fondJeu.Afficher()
 
-		if time % 150 == 0 and len(tabBonus) <= 1:
+
+		if time % 333 == 0 and len(tabBonus) <= 1:
 			New_Bonus(tabBonus, bank, fenetre, largeur, time)
 
 		if time%250 == 0:
@@ -106,16 +107,19 @@ while continuer:
 
 		if time % cooldownBoss == 0:
 			boss = True
-			New_Boss(bank["boss"], enemys, largeur, hauteur, fenetre, time)
+			New_Boss(bank["boss"], enemys, largeur, fenetre, time)
 
 		if len(enemys) > 0:
 			boss = BossTimer(enemys[-1])
 
 		for enemy in enemys:
-			enemy.Deplacer()
+			enemy.tir(bank["tirsE"], fenetre, time)
+			enemy.deplacerAfficherTirs()
+			enemy.DescenteEnCercles()
 			enemy.Afficher()
+			Boss = enemy.Remove(enemys)
 			enemy.Collisions(perso, perso, time)
-			for tir in tirsPerso:
+			for tir in perso.tirs:
 				enemy.Collisions(tir, perso, time)
 
 		for bonus in tabBonus:
@@ -123,11 +127,7 @@ while continuer:
 			bonus.Deplacer(largeur, hauteur)
 			bonus.alive(time)
 
-		for tir in tirsPerso:
-			bank["d"] = font.render(str(tir.degats), 1, (255, 0, 0)).convert_alpha()
-			d = ElementGraphique(70, 120, bank["d"], fenetre)
-			d.Afficher()
-
+		for tir in perso.tirs:
 			if perso.plusdamges:
 				tir.damagesUp()
 			else:      
@@ -141,39 +141,23 @@ while continuer:
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
-		perso.Tir(tirsPerso, bank["tirs"], touches, time, tir_son)
+		perso.Tir(bank["tirsE"], touches, time, tir_son)
 
 		x, enemys = SupprTrucs(enemys)
-		p, tirsPerso = SupprTrucs(tirsPerso)
+		p, perso.tirs = SupprTrucs(perso.tirs)
 		p, tabBonus = SupprTrucs(tabBonus)
 
 		perso.kill += x
 
-		if perso.kill >0:
-			bank["kill"] = font.render(str(time/perso.kill), 1, (255, 0, 0)).convert_alpha()
+		if perso.kill > 0:
+			print(perso.kill)
+			bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 			kill = ElementGraphique(70, 0, bank["kill"], fenetre)
 			kill.Afficher()
 
-		bank["v"] = font.render(str(perso.vitesse), 1, (255, 0, 0)).convert_alpha()
-		v = ElementGraphique(70, 30, bank["v"], fenetre)
-
-		bank["g"] = font.render(str(perso.invinsible), 1, (255, 0, 0)).convert_alpha()
-		g = ElementGraphique(70, 60, bank["g"], fenetre)
-
-		bank["h"] = font.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
-		h = ElementGraphique(70, 90, bank["h"], fenetre)
-
-		bank["c"] = font.render(str(perso.cooldown), 1, (255, 0, 0)).convert_alpha()
-		c = ElementGraphique(70, 150, bank["c"], fenetre)
-
-
-
 		score.Afficher()
 		
-		v.Afficher()
-		g.Afficher()
-		h.Afficher()
-		c.Afficher()
+
 
 	pygame.display.update()
 

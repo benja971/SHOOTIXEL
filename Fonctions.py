@@ -19,8 +19,10 @@ def images(font):
 	bank["shield"] = pygame.image.load("./Images/Bonus/Powerup_Shields.png")
 	bank["heal"] = pygame.image.load("./Images/Bonus/Powerup_Health.png")
 	bank["cooldown"] = pygame.image.load("./Images/Bonus/Powerup_Ammo.png")
-	# for i in range(1, 23):
-	# 	bank["enemys"].append(pygame.image.load("./Images/Enemy/ennemi" + str(i) + ".png"))
+	bank["tirsE"] = []
+
+	for i in range(1, 6):
+		bank["tirsE"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
 	# ============= Menu =============
 	bank['Main'] = pygame.image.load("./images/Menu/BgM.jpg").convert_alpha()
@@ -68,17 +70,16 @@ def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
-
-	enemys.append(Enemy(randint(200, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 15, 2, 20, largeur, "Enemy"))
+	enemys.append(Enemy(randint(200, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 15, 2, 20, largeur, "Enemy", choice([True, False])))
 	enemys[-1].Choix(i)
 
 
-def New_Boss(img, enemys, largeur, hauteur, fenetre, i):
+def New_Boss(img, enemys, largeur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 boss à la liste d'ennemis
 	"""
 	enemys.append(Enemy(largeur//2 + 150 - 15, -10, img, fenetre,
-						200, 1, 0, largeur, "Boss"))
+						200, 1, 0, largeur, "Boss", choice([True, False])))
 	enemys[-1].Choix(i)
 
 
