@@ -29,6 +29,7 @@ class ElementGraphique:
             if self.object == "Enemy" or self.object == "Boss":
                 if other.object == "TirPerso":
                     self.TakeDamages(other)
+					
                     other.Kill()
 
                 elif other.object == "Perso":
@@ -41,6 +42,11 @@ class ElementGraphique:
                     other.Kill()
                     self.Kill()
                     self.apllyBonus(perso, time)
+
+            if self.object == "Perso" :
+                if other.object == "TirEnnemy" :
+                    self.TakeDamages(self)
+        
 
     def TakeDamages(self, other):
         """
@@ -109,7 +115,8 @@ class Perso(ElementAnimeDir):
         # self.rect.y = 250
         self.rect.y = hauteur - self.rect.h - 20
         self.tirs = []
-        self.vie = 100
+        # self.vie = 100
+        self.vie = 0
         self.vitesse = 4
         self.cooldown = 30
         self.money = 0
@@ -152,8 +159,10 @@ class Perso(ElementAnimeDir):
     def Alive(self):
         """
         """
+        
         if self.vie <= 0:
-            print("Perdu")
+            print("Perdu")         
+	
 
     def speedUp(self):
         """

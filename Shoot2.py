@@ -1,9 +1,10 @@
 import pygame
+import time
+
 from Class import ElementGraphiqueAnimé
 from Class import ElementGraphique
 from Class import Perso 
 from Fonctions import * 
-
 
 pygame.init()
 
@@ -17,7 +18,7 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Jeu"
+state = "Menu"
 selection_menu = 1
 selection_menu1 = 1
 enemys = []
@@ -28,6 +29,7 @@ countBoss = 0
 boss = False
 couldown = 40
 
+xs, ys = 0, 0 #flag test*********
 
 # ============= Intro =============
 
@@ -56,6 +58,10 @@ son_menu = pygame.mixer.Sound("./son Effect/Menu/Menu.wav")
 perso = Perso(0, 0, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
+current_life = ElementGraphique(0, 40, bank["current_life"], fenetre)
+
+lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre)
+
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
 BLACK = (0, 0, 0)
 # ============= Jeu =============
@@ -73,6 +79,33 @@ while continuer:
 		if event.type == pygame.QUIT:
 			continuer = False
 
+	if state == "Lose" :
+		# horloge.tick(10)
+		menu_fond.Afficher()
+		interface.Afficher()
+		lose_text.Afficher()    
+		play_Bouton.Afficher()    
+		exit_Bouton.Afficher()
+		
+		# test =========== *******
+# ============================ Mouse Gestion ============================
+		select = pygame.Rect(xs, ys, 1, 1)
+
+		select_collide_1(select, play_Bouton, pointeur1, exit_Bouton, pointeur2)
+	
+		for event in pygame.event.get() :
+			if event.type == pygame.MOUSEMOTION :
+				xs = event.pos[0]
+				ys = event.pos[1]
+			if select.colliderect(play_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				perso.vie = 20
+				son_menu.stop()
+				state = "Jeu"
+			
+			if select.colliderect(exit_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				continuer = False
+# ============================ Mouse Gestion ============================
+
 	if state == "Intro":
 		horloge.tick(10)
 		loading.Afficher()
@@ -84,7 +117,7 @@ while continuer:
 
 	if state == "Menu":
 
-		horloge.tick(10)
+		horloge.tick(30)
 		
 		menu_fond.Afficher()
 		interface.Afficher()
@@ -93,26 +126,53 @@ while continuer:
 		exit_Bouton.Afficher()
 		Settings.Afficher()
 		Shop.Afficher()
-		
-		selection_menu = move_Pointeur(selection_menu, touches)
+		# test =========== *******
+# ============================ Mouse Gestion ============================
+		select = pygame.Rect(xs, ys, 1, 1)
 
-		if selection_menu == 1:
-			pointeur1.Afficher()
-			if touches[pygame.K_RETURN]:
+		select_collide_1(select, play_Bouton, pointeur1, exit_Bouton, pointeur2)
+		select_collide_2(select, pointeur_settings, Settings, pointeur_Shop, Shop)
+
+		for event in pygame.event.get() :
+			if event.type == pygame.MOUSEMOTION :
+				xs = event.pos[0]
+				ys = event.pos[1]
+			if select.colliderect(play_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				perso.vie = 20
 				son_menu.stop()
-				state = 'Jeu'
-
-		if selection_menu == 2:
-
-			pointeur2.Afficher()
-			if touches[pygame.K_RETURN]:
+				state = "Jeu"
+			
+			if select.colliderect(exit_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
 				continuer = False
 
-		if selection_menu == 3:
-			pointeur_settings.Afficher()
-		
-		if selection_menu == 4 :
-			pointeur_Shop.Afficher()
+			# if select.colliderect(Settings.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				# do .....
+
+			# if select.colliderect(Shop.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				# do ...
+				
+# ============================ Mouse Gestion ============================
+# 	
+# ========================= Keyboard Management ========================= 
+		# selection_menu = move_Pointeur(selection_menu, touches)
+
+		# if selection_menu == 1:
+		# 	pointeur1.Afficher()
+		# 	if touches[pygame.K_RETURN]:
+		# 		son_menu.stop()
+		# 		state = 'Jeu'
+
+		# if selection_menu == 2:
+		# 	pointeur2.Afficher()
+		# 	if touches[pygame.K_RETURN]:
+		# 		continuer = False
+
+		# if selection_menu == 3:
+		# 	pointeur_settings.Afficher()
+
+		# if selection_menu == 4 :
+		# 	pointeur_Shop.Afficher()
+# ========================= Keyboard Management ========================= 
 
 	if state == "Jeu":
 		
@@ -143,7 +203,7 @@ while continuer:
 			enemy.deplacerAfficherTirs()
 			enemy.DescenteEnCercles()
 			enemy.Afficher()
-			enemy.Collisions(perso, perso, time)
+			enemy.Collisions(perso, enemy, time)
 
 			for tir in perso.tirs:
 				enemy.Collisions(tir, perso, time)
@@ -179,8 +239,20 @@ while continuer:
 			bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 			kill = ElementGraphique(70, 0, bank["kill"], fenetre)
 			kill.Afficher()
+		
+		
+		bank["life"] = font.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
+		perso_life = ElementGraphique(70, 40, bank["life"], fenetre)
+	
+		perso_life.Afficher()
+
+		if perso.vie <= 0 :
+		
+			state = "Lose"
+			son_menu.play()
 
 		score.Afficher()
+		current_life.Afficher()
 		
 
 

@@ -1,30 +1,22 @@
 import tkinter as tk
 
-def show_entry_fields():
-    print("First Name: %s\nLast Name: %s" % (e1.get(), e2.get()))
+def get_class():  #no need to pass arguments to functions in both cases
+    print (var.get())
 
-master = tk.Tk()
-tk.Label(master, 
-         text="Prénom").grid(row=0)
-tk.Label(master, 
-         text="Nom").grid(row=1)
+def get_entry(): 
+    print (ent.get())
 
-e1 = tk.Entry(master)
-e2 = tk.Entry(master)
 
-e1.grid(row=0, column=1)
-e2.grid(row=1, column=1)
+root = tk.Tk()
 
-tk.Button(master, 
-          text='Quit', 
-          command=master.quit).grid(row=3, 
-                                    column=0, 
-                                    sticky=tk.W, 
-                                    pady=4)
-tk.Button(master, 
-          text='Show', command=show_entry_fields).grid(row=3, 
-                                                       column=1, 
-                                                       sticky=tk.W, 
-                                                       pady=4)
+var = tk.StringVar()
 
-tk.mainloop()
+ent = tk.Entry(root,textvariable = var)
+btn1 = tk.Button(root, text="Variable Class", command=get_class)
+btn2 = tk.Button(root, text="Get Method", command=get_entry)
+
+ent.pack()
+btn1.pack()
+btn2.pack()
+
+root.mainloop()
