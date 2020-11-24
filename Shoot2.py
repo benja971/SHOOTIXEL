@@ -7,10 +7,14 @@ from Fonctions import *
 
 pygame.init()
 
+font_menu = pygame.font.Font('./Text/Retro Gaming.ttf', 60)
+font_intro = pygame.font.Font('./Text/Retro Gaming.ttf', 30)
+font_jeu = pygame.font.Font('./Text/Retro Gaming.ttf', 20)
+
 largeur, hauteur = 750, 800
 fenetre = pygame.display.set_mode((largeur, hauteur))
 font = pygame.font.Font(None, 30)
-bank = images(font)
+bank = images(font_jeu, font_intro, font_menu)
 
 horloge = pygame.time.Clock()
 
@@ -23,11 +27,11 @@ selection_menu1 = 1
 enemys = []
 tabBonus = []
 cooldownEn = 40
-cooldownBoss = 500
+cooldownBoss = 100
 countBoss = 0
 boss = False
 couldown = 40
-
+msgdeb = 0
 
 # ============= Intro =============
 
@@ -115,7 +119,6 @@ while continuer:
 			pointeur_Shop.Afficher()
 
 	if state == "Jeu":
-		
 		fenetre.fill(BLACK)
 		fondJeu.Afficher()
 
@@ -131,11 +134,12 @@ while continuer:
 		if time % cooldownBoss == 0:
 			boss = True
 			New_Boss(bank["boss"], enemys, largeur, fenetre, time)
-		
+
+		if len(enemys) > 0 and boss and enemys[-1].vie <= 0 and enemys[-1].object == "Boss":
+			boss = False
 
 		if len(enemys) > 0:
-			boss = BossTimer(enemys[-1])
-			if enemys[-1].object == "Enemy":
+			if enemys[-1].object == "Enemy" and boss:
 				boss = False
 
 		for enemy in enemys:
@@ -145,9 +149,17 @@ while continuer:
 			enemy.Afficher()
 			enemy.Collisions(perso, perso, time)
 
+			if enemy.object == "Boss" and enemy.vie <= 0:
+				if time%500 != 0:
+					afficherMsgBoss(bank["msgKillB"], fenetre)
+
 			for tir in perso.tirs:
 				enemy.Collisions(tir, perso, time)
-		
+			
+			for tirE in enemy.tirs:
+				tirE.Collisions(perso, perso, time)
+				p, enemy.tirs = SupprTrucs(enemy.tirs)
+
 		for bonus in tabBonus:
 			bonus.Afficher()
 			bonus.Deplacer(largeur, hauteur)
@@ -167,22 +179,21 @@ while continuer:
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
-		perso.Tir(bank["tirsE"], touches, time, tir_son)
+		perso.Tir(bank["tirsP"], touches, time, tir_son)
 
 		x, enemys = SupprTrucs(enemys)
 		p, perso.tirs = SupprTrucs(perso.tirs)
 		p, tabBonus = SupprTrucs(tabBonus)
-
+		
 		perso.kill += x
+		# perso.Alive()
 
 		if perso.kill > 0:
 			bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
-			kill = ElementGraphique(70, 0, bank["kill"], fenetre)
+			kill = ElementGraphique(95, 0, bank["kill"], fenetre)
 			kill.Afficher()
 
 		score.Afficher()
-		
-
 
 	pygame.display.update()
 

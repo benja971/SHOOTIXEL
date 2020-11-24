@@ -4,7 +4,7 @@ from Class import Enemy
 from Class import Bonus
 
 
-def images(font):
+def images(font_jeu, font_intro, font_menu):
 	"""
 	Fonction qui recupère les images dans le dossier
 	"""
@@ -20,16 +20,17 @@ def images(font):
 	bank["heal"] = pygame.image.load("./Images/Bonus/Powerup_Health.png")
 	bank["cooldown"] = pygame.image.load("./Images/Bonus/Powerup_Ammo.png")
 	bank["tirsE"] = []
+	bank["tirsP"] = []
 
 	for i in range(1, 6):
-		bank["tirsE"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
+		bank["tirsE"].append(pygame.transform.rotate(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"), 180))
+		bank["tirsP"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
 	# ============= Intro =============	
 	bank["progression"] = []
 	for i in range(1, 6):
 		bank["progression"].append(pygame.image.load("./Images/progress" + str(i) + ".png"))
 
-	font_intro = pygame.font.Font('./Text/Retro Gaming.ttf', 30)
 	bank["loading"] = font_intro.render("loading...", True, (255, 255, 255))
 
 	# ============= Menu =============
@@ -62,6 +63,7 @@ def images(font):
 	imgPerso["Right"] = []
 	imgPerso["Left"] = []
 	imgPerso["Standing"] = []
+	bank["msgKillB"] = font_intro.render("Boss vaincue, félicitation champion !!", True, (255, 255, 255))
 
 	for i in range(1, 3):
 		imgPerso["Right"].append(pygame.image.load(
@@ -73,7 +75,7 @@ def images(font):
 		"./Images/Vaisseaux/Standing.png"))
 
 	bank["perso"] = imgPerso
-	bank["score"] = font.render("Score :", 1, (255, 0, 0))
+	bank["score"] = font_jeu.render("Score :", 1, (255, 0, 0))
 
 	return bank
 
@@ -93,15 +95,6 @@ def New_Boss(img, enemys, largeur, fenetre, i):
 	enemys.append(Enemy(largeur//2 + 150 - 15, -10, img, fenetre,
 						200, 1, 0, largeur, "Boss", choice([True, False])))
 	enemys[-1].Choix(i)
-
-
-def BossTimer(boss):
-	"""
-	Fonction qui détermine lorsque le boss est terminé
-	"""
-	if boss.vie >= 0 and boss.object == "Boss":
-		return True
-	return False
 
 
 def New_Bonus(tabBonus, bank, fenetre, largeur, time):
@@ -138,3 +131,11 @@ def move_Pointeur(selection_menu, touches):
 		selection_menu -= 1
 
 	return selection_menu
+
+
+def afficherMsgBoss(img, fenetre):
+	"""
+	"""
+	rectfen = fenetre.get_rect()
+	fenetre.blit(img, (rectfen.centerx, rectfen.centery))
+	
