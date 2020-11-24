@@ -255,17 +255,17 @@ while continuer:
 
 # test flag *** ==============
 # En attendant de trouver une lsite d'image 
-		if perso.vie == 100 :
-			vie_100.Afficher()
+		# if perso.vie == 100 :
+		# 	vie_100.Afficher()
 
-		if perso.vie == 75 :
-			vie_75.Afficher()
+		# if perso.vie == 75 :
+		# 	vie_75.Afficher()
 
-		if perso.vie == 50 :
-			vie_50.Afficher()
+		# if perso.vie == 50 :
+		# 	vie_50.Afficher()
 
-		if perso.vie == 25 :
-			vie_25.Afficher()
+		# if perso.vie == 25 :
+		# 	vie_25.Afficher()
 
 		if perso.vie <= 0 :
 			state = "Lose"
