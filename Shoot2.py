@@ -106,7 +106,8 @@ while continuer:
 				xs = event.pos[0]
 				ys = event.pos[1]
 			if select.colliderect(play_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
-				perso.vie = 20
+				time = 0
+				perso.vie = 100
 				son_menu.stop()
 				state = "Jeu"
 			
@@ -146,6 +147,7 @@ while continuer:
 				xs = event.pos[0]
 				ys = event.pos[1]
 			if select.colliderect(play_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				horloge.tick(60)
 				son_menu.stop()
 				state = "Jeu"
 			
@@ -268,6 +270,7 @@ while continuer:
 		# 	vie_25.Afficher()
 
 		if perso.vie <= 0 :
+			save_score(perso.kill)
 			state = "Lose"
 			son_menu.play()
 

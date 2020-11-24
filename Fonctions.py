@@ -1,4 +1,5 @@
 import pygame
+import pickle
 from random import randint, choice
 from Class import Enemy
 from Class import Bonus
@@ -166,3 +167,13 @@ def select_collide_2(select, pointeur_settings, settings, pointeur_shop, shop) :
         pointeur_shop.Afficher()
 
     return select
+
+def save_score(score) :
+     with open('score', 'wb') as fichier:
+        mon_pickler = pickle.Pickler(fichier)
+        mon_pickler.dump(score)
+
+def open_score() :
+    with open('score', 'rb') as fichier:
+        mon_depickler = pickle.Unpickler(fichier)
+        score_recupere = mon_depickler.load()

@@ -43,11 +43,6 @@ class ElementGraphique:
                     self.Kill()
                     self.apllyBonus(perso, time)
 
-            if self.object == "Perso" :
-                if other.object == "TirEnnemy" :
-                    self.TakeDamages(self)
-        
-
     def TakeDamages(self, other):
         """
         Fonction qui retire de la vie à un élément en cas de collision
@@ -115,7 +110,7 @@ class Perso(ElementAnimeDir):
         # self.rect.y = 250
         self.rect.y = hauteur - self.rect.h - 20
         self.tirs = []
-        self.vie = 100
+        self.vie = 20
         self.vitesse = 4
         self.cooldown = 30
         self.money = 0
