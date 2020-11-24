@@ -1,17 +1,20 @@
 import pygame
-import time
-
 from Class import ElementGraphiqueAnimé
 from Class import ElementGraphique
 from Class import Perso 
 from Fonctions import * 
 
+
 pygame.init()
+
+font_menu = pygame.font.Font('Text/Positive System.otf', 60)
+font_intro = pygame.font.Font('./Text/Retro Gaming.ttf', 30)
+font_jeu = pygame.font.Font('./Text/Retro Gaming.ttf', 20)
+font_standart = pygame.font.Font(None, 30)
 
 largeur, hauteur = 750, 800
 fenetre = pygame.display.set_mode((largeur, hauteur))
-font = pygame.font.Font(None, 30)
-bank = images(font)
+bank = images(font_jeu, font_intro, font_menu, font_standart)
 
 horloge = pygame.time.Clock()
 
@@ -24,16 +27,17 @@ selection_menu1 = 1
 enemys = []
 tabBonus = []
 cooldownEn = 40
-cooldownBoss = 500
+cooldownBoss = 100
 countBoss = 0
 boss = False
 couldown = 40
+msgdeb = 0
 
 xs, ys = 0, 0 #flag test*********
 
 # ============= Intro =============
 
-barDeProgression = ElementGraphiqueAnimé(largeur/2 - 160, 350, bank["progression"], fenetre)
+barDeProgression = ElementGraphiqueAnimé(largeur/2 - 160, 350, bank["progression"], fenetre) 
 loading = ElementGraphique(largeur/2 - 160, 290, bank["loading"], fenetre)
 
 # ============= Menu =============
@@ -58,20 +62,11 @@ son_menu = pygame.mixer.Sound("./son Effect/Menu/Menu.wav")
 perso = Perso(0, 0, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
-
-current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #test flag ****
-
-# current test ========================
-vie_25 = ElementGraphique(largeur - 75, 50, bank['Vie25'], fenetre)
-vie_50 = ElementGraphique(largeur - 75, 50, bank['Vie50'], fenetre)
-vie_75 = ElementGraphique(largeur - 75, 50, bank['Vie75'], fenetre)
-vie_100 = ElementGraphique(largeur - 75, 50, bank['Vie100'], fenetre)
-# current test ========================
-
-lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre)
-
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
 BLACK = (0, 0, 0)
+
+current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #flag ****
+lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre) #flag ****
 # ============= Jeu =============
 
 while continuer:
@@ -86,6 +81,14 @@ while continuer:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			continuer = False
+
+	if state == "Intro":
+		horloge.tick(10)
+		loading.Afficher()
+		barDeProgression.Afficher()
+		if time == 50:
+			state = "Menu"
+			son_menu.play()
 
 	if state == "Lose" :
 		# horloge.tick(10)
@@ -114,15 +117,6 @@ while continuer:
 			if select.colliderect(exit_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
 				continuer = False
 # ============================ Mouse Gestion ============================
-
-	if state == "Intro":
-		horloge.tick(10)
-		loading.Afficher()
-		barDeProgression.Afficher()
-		if time == 50:
-			state = "Menu"
-			son_menu.play()
-
 
 	if state == "Menu":
 
@@ -184,7 +178,6 @@ while continuer:
 # ========================= Keyboard Management ========================= 
 
 	if state == "Jeu":
-		
 		fenetre.fill(BLACK)
 		fondJeu.Afficher()
 
@@ -200,11 +193,12 @@ while continuer:
 		if time % cooldownBoss == 0:
 			boss = True
 			New_Boss(bank["boss"], enemys, largeur, fenetre, time)
-		
+
+		if len(enemys) > 0 and boss and enemys[-1].vie <= 0 and enemys[-1].object == "Boss":
+			boss = False
 
 		if len(enemys) > 0:
-			boss = BossTimer(enemys[-1])
-			if enemys[-1].object == "Enemy":
+			if enemys[-1].object == "Enemy" and boss:
 				boss = False
 
 		for enemy in enemys:
@@ -212,11 +206,19 @@ while continuer:
 			enemy.deplacerAfficherTirs()
 			enemy.DescenteEnCercles()
 			enemy.Afficher()
-			enemy.Collisions(perso, enemy, time)
+			enemy.Collisions(perso, perso, time)
+
+			if enemy.object == "Boss" and enemy.vie <= 0:
+				if time%500 != 0:
+					afficherMsgBoss(bank["msgKillB"], fenetre)
 
 			for tir in perso.tirs:
 				enemy.Collisions(tir, perso, time)
-		
+			
+			for tirE in enemy.tirs:
+				tirE.Collisions(perso, perso, time)
+				p, enemy.tirs = SupprTrucs(enemy.tirs)
+
 		for bonus in tabBonus:
 			bonus.Afficher()
 			bonus.Deplacer(largeur, hauteur)
@@ -236,21 +238,21 @@ while continuer:
 
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
-		perso.Tir(bank["tirsE"], touches, time, tir_son)
+		perso.Tir(bank["tirsP"], touches, time, tir_son)
 
 		x, enemys = SupprTrucs(enemys)
 		p, perso.tirs = SupprTrucs(perso.tirs)
 		p, tabBonus = SupprTrucs(tabBonus)
-
+		
 		perso.kill += x
+		# perso.Alive()
 
 		if perso.kill > 0:
-			bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
-			kill = ElementGraphique(70, 0, bank["kill"], fenetre)
+			bank["kill"] = font_standart.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
+			kill = ElementGraphique(95, 0, bank["kill"], fenetre)
 			kill.Afficher()
-		
-		
-		bank["life"] = font.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
+
+		bank["life"] = font_standart.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
 		perso_life = ElementGraphique(70, 40, bank["life"], fenetre)
 	
 		perso_life.Afficher()
@@ -277,8 +279,8 @@ while continuer:
 # test flag *** ==============
 		score.Afficher()
 		current_life.Afficher() #flag ****
-		
 
+		score.Afficher()
 
 	pygame.display.update()
 
