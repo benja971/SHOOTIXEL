@@ -116,7 +116,7 @@ class Perso(ElementAnimeDir):
         self.rect.y = hauteur - self.rect.h - 20
         self.tirs = []
         # self.vie = 100
-        self.vie = 0
+        self.vie = 100 #test flag ***
         self.vitesse = 4
         self.cooldown = 30
         self.money = 0

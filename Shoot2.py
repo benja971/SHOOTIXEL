@@ -58,7 +58,15 @@ son_menu = pygame.mixer.Sound("./son Effect/Menu/Menu.wav")
 perso = Perso(0, 0, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
-current_life = ElementGraphique(0, 40, bank["current_life"], fenetre)
+
+current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #test flag ****
+
+# current test ========================
+vie_25 = ElementGraphique(largeur - 75, 50, bank['Vie25'], fenetre)
+vie_50 = ElementGraphique(largeur - 75, 50, bank['Vie50'], fenetre)
+vie_75 = ElementGraphique(largeur - 75, 50, bank['Vie75'], fenetre)
+vie_100 = ElementGraphique(largeur - 75, 50, bank['Vie100'], fenetre)
+# current test ========================
 
 lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre)
 
@@ -138,7 +146,6 @@ while continuer:
 				xs = event.pos[0]
 				ys = event.pos[1]
 			if select.colliderect(play_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
-				perso.vie = 20
 				son_menu.stop()
 				state = "Jeu"
 			
@@ -246,13 +253,27 @@ while continuer:
 	
 		perso_life.Afficher()
 
+# test flag *** ==============
+# En attendant de trouver une lsite d'image 
+		if perso.vie == 100 :
+			vie_100.Afficher()
+
+		if perso.vie == 75 :
+			vie_75.Afficher()
+
+		if perso.vie == 50 :
+			vie_50.Afficher()
+
+		if perso.vie == 25 :
+			vie_25.Afficher()
+
 		if perso.vie <= 0 :
-		
 			state = "Lose"
 			son_menu.play()
 
+# test flag *** ==============
 		score.Afficher()
-		current_life.Afficher()
+		current_life.Afficher() #flag ****
 		
 
 
