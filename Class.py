@@ -41,6 +41,7 @@ class ElementGraphique:
 					other.Kill()
 					self.Kill()
 					self.apllyBonus(perso, time)
+		
 
 	def TakeDamages(self, other):
 		"""
@@ -53,15 +54,6 @@ class ElementGraphique:
 		Fonction qui tue un élément
 		"""
 		self.vie = 0
-
-	def Remove(self, list_conscernee):
-		"""
-		Fonction qui supprime les éléments qui n'ont plus lieu d'être
-		"""
-		if self.vie <= 0 and self in list_conscernee:
-			list_conscernee.remove(self)
-			if self.object == "Boss":
-				return False
 
 	def Afficher(self):
 		self.fenetre.blit(self.image, self.rect)
@@ -115,11 +107,12 @@ class Perso(ElementAnimeDir):
 		super().__init__(x, y, images_all_dir, fenetre)
 		self.object = "Perso"
 		self.rect.x = largeur // 2 - self.rect.w // 2
-		self.rect.y = hauteur - self.rect.h - 20
+		self.rect.y = 250
+		# self.rect.y = hauteur - self.rect.h - 20
 		self.tirs = []
 		self.vie = 100
 		self.vitesse = 4
-		self.cooldown = 40
+		self.cooldown = 30
 		self.money = 0
 		self.kill = 0
 		self.boosted = False
@@ -153,7 +146,7 @@ class Perso(ElementAnimeDir):
 
 	def Tir(self, img, touches, i, son_tir):
 		if touches[pygame.K_SPACE] and i % self.cooldown == 0:
-			self.tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 5, 15, self, "TirPerso"))
+			self.tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 7, 15, self, "TirPerso"))
 			son_tir.play()
 
 

@@ -17,13 +17,13 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Intro"
+state = "Jeu"
 selection_menu = 1
 selection_menu1 = 1
 enemys = []
 tabBonus = []
 cooldownEn = 40
-cooldownBoss = 1000
+cooldownBoss = 500
 countBoss = 0
 boss = False
 couldown = 40
@@ -53,7 +53,7 @@ son_menu = pygame.mixer.Sound("./son Effect/Menu/Menu.wav")
 # ============= Menu =============
 
 # ============= Jeu =============
-perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
+perso = Perso(0, 0, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
@@ -66,7 +66,8 @@ while continuer:
 	touches = pygame.key.get_pressed()
 
 	if touches[pygame.K_ESCAPE]:
-		state = "Menu"
+		# state = "Menu"
+		continuer = False
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -102,6 +103,7 @@ while continuer:
 				state = 'Jeu'
 
 		if selection_menu == 2:
+
 			pointeur2.Afficher()
 			if touches[pygame.K_RETURN]:
 				continuer = False
@@ -113,10 +115,9 @@ while continuer:
 			pointeur_Shop.Afficher()
 
 	if state == "Jeu":
-
+		
 		fenetre.fill(BLACK)
 		fondJeu.Afficher()
-
 
 		if time % 333 == 0 and len(tabBonus) <= 1:
 			New_Bonus(tabBonus, bank, fenetre, largeur, time)
@@ -130,20 +131,23 @@ while continuer:
 		if time % cooldownBoss == 0:
 			boss = True
 			New_Boss(bank["boss"], enemys, largeur, fenetre, time)
+		
 
 		if len(enemys) > 0:
 			boss = BossTimer(enemys[-1])
+			if enemys[-1].object == "Enemy":
+				boss = False
 
 		for enemy in enemys:
 			enemy.tir(bank["tirsE"], fenetre, time)
 			enemy.deplacerAfficherTirs()
 			enemy.DescenteEnCercles()
 			enemy.Afficher()
-			Boss = enemy.Remove(enemys)
 			enemy.Collisions(perso, perso, time)
+
 			for tir in perso.tirs:
 				enemy.Collisions(tir, perso, time)
-
+		
 		for bonus in tabBonus:
 			bonus.Afficher()
 			bonus.Deplacer(largeur, hauteur)
@@ -172,7 +176,6 @@ while continuer:
 		perso.kill += x
 
 		if perso.kill > 0:
-			print(perso.kill)
 			bank["kill"] = font.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 			kill = ElementGraphique(70, 0, bank["kill"], fenetre)
 			kill.Afficher()
