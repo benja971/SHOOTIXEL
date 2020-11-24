@@ -24,14 +24,26 @@ def images(font):
 	for i in range(1, 6):
 		bank["tirsE"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
+	# ============= Intro =============	
+	bank["progression"] = []
+	for i in range(1, 6):
+		bank["progression"].append(pygame.image.load("./Images/progress" + str(i) + ".png"))
+
+	font_intro = pygame.font.Font('./Text/Retro Gaming.ttf', 30)
+	bank["loading"] = font_intro.render("loading...", True, (255, 255, 255))
+
 	# ============= Menu =============
-	bank['Main'] = pygame.image.load("./images/Menu/BgM.jpg").convert_alpha()
-	bank['Play'] = pygame.image.load("./Images/Menu/Play.png")
-	bank['Option'] = pygame.image.load("./Images/Menu/Option.png")
+	bank['Main'] = pygame.image.load("./Images/Menu/Main.png").convert_alpha()
+	bank['interface'] = pygame.image.load("./Images/Menu/Interface.png")
+	bank['Play'] = pygame.image.load("./Images/Menu/Start.png")
 	bank['Exit'] = pygame.image.load("./Images/Menu/Exit.png")
 	bank['Pointeur'] = pygame.image.load("./Images/Menu/Pointeur.png")
-
-	font_menu = pygame.font.Font('Text/Kemco Pixel Bold.ttf', 70)
+	bank['settings'] = pygame.image.load("./Images/Menu/Settings.png")
+	bank['shop'] = pygame.image.load("./Images/Menu/Shop.png")
+	bank['Psettings'] = pygame.image.load("./Images/Menu/Psettings.png")
+	bank['Pshop'] = pygame.image.load("./Images/Menu/Pshop.png")
+	
+	font_menu = pygame.font.Font('Text/Positive System.otf', 60)
 	bank["text_menu"] = font_menu.render('SHOOTIXEL', True, (255, 255, 255))
 	# ============= Menu =============
 
@@ -109,22 +121,20 @@ def SupprTrucs(liste):
 	x = len(liste) - len(liste_keep)
 	return x, liste_keep
 
-def move_Pointeur(selection_menu, touches, son_pointeur_menu):
+def move_Pointeur(selection_menu, touches):
 	"""
 	Fonction qui gère le pointeur du Menu
 	"""
 	# évitons que le pointeur se barre trop loin
-	if selection_menu >= 4:
+	if selection_menu >= 5:
 		selection_menu = 1
 	if selection_menu == 0:
-		selection_menu = 3
+		selection_menu = 4
 
 	if touches[pygame.K_DOWN]:
-		son_pointeur_menu.play()
 		selection_menu += 1
 
 	if touches[pygame.K_UP]:
-		son_pointeur_menu.play()
 		selection_menu -= 1
 
 	return selection_menu

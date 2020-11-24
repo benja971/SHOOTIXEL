@@ -1,4 +1,5 @@
 import pygame
+from Class import ElementGraphiqueAnimé
 from Class import ElementGraphique
 from Class import Perso 
 from Fonctions import * 
@@ -9,7 +10,6 @@ pygame.init()
 largeur, hauteur = 750, 800
 fenetre = pygame.display.set_mode((largeur, hauteur))
 font = pygame.font.Font(None, 30)
-
 bank = images(font)
 
 horloge = pygame.time.Clock()
@@ -17,8 +17,9 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Jeu"
+state = "Intro"
 selection_menu = 1
+selection_menu1 = 1
 enemys = []
 tabBonus = []
 cooldownEn = 40
@@ -27,20 +28,27 @@ countBoss = 0
 boss = False
 couldown = 40
 
+
+# ============= Intro =============
+
+barDeProgression = ElementGraphiqueAnimé(largeur/2 - 160, 350, bank["progression"], fenetre)
+loading = ElementGraphique(largeur/2 - 160, 290, bank["loading"], fenetre)
+
 # ============= Menu =============
-menu_fond = ElementGraphique(0, 0, bank['Main'], fenetre)
-text_presentation = ElementGraphique(largeur / 2 - 240, 50, bank['text_menu'], fenetre)
-play_Bouton = ElementGraphique(largeur / 2 - 75, 150, bank['Play'], fenetre)
-option_Bouton = ElementGraphique(largeur / 2 - 75, 350, bank['Option'], fenetre)
-exit_Bouton = ElementGraphique(largeur / 2 - 75, 550, bank['Exit'], fenetre)
-pointeur1 = ElementGraphique(largeur / 2 - 200, 150, bank['Pointeur'], fenetre)
-pointeur2 = ElementGraphique(largeur / 2 - 200, 350, bank['Pointeur'], fenetre)
-pointeur3 = ElementGraphique(largeur / 2 - 200, 550, bank['Pointeur'], fenetre)
+menu_fond = ElementGraphique(0 , 50, bank['Main'], fenetre)
+interface = ElementGraphique(largeur/2-325 , 70, bank['interface'], fenetre)
+play_Bouton = ElementGraphique(largeur / 2 - 120, 225, bank['Play'], fenetre)
+text_presentation = ElementGraphique(largeur/2 - 160, 95, bank["text_menu"], fenetre)
+exit_Bouton = ElementGraphique(largeur / 2 - 120, 480, bank['Exit'], fenetre)
+pointeur1 = ElementGraphique(largeur / 2 - 175, 235, bank['Pointeur'], fenetre)
+pointeur2 = ElementGraphique(largeur / 2 - 175, 490, bank['Pointeur'], fenetre)
+pointeur_settings = ElementGraphique(125, 520, bank['Psettings'], fenetre)
+pointeur_Shop = ElementGraphique(580, 520, bank['Pshop'], fenetre)
+Settings = ElementGraphique(125, 520, bank['settings'], fenetre)
+Shop = ElementGraphique(580, 520, bank['shop'], fenetre)
 
 # ============= Son Menu =============
-son_menu = pygame.mixer.Sound("./Son Effect/Menu/Intro.wav")
-son_pointeur_menu = pygame.mixer.Sound("./Son Effect/Menu/pointeur.wav")
-son_menu.play()  # Lancement du son_menu hors de la boucle, pour éviter le ralentissement sur le son
+son_menu = pygame.mixer.Sound("./son Effect/Menu/Menu.wav")
 # ============= Son Menu =============
 # ============= Menu =============
 
@@ -48,7 +56,7 @@ son_menu.play()  # Lancement du son_menu hors de la boucle, pour éviter le rale
 perso = Perso(250, 800, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
-tir_son = pygame.mixer.Sound("./son Effect/1/Laser_Shoot.wav")
+tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
 BLACK = (0, 0, 0)
 # ============= Jeu =============
 
@@ -58,21 +66,34 @@ while continuer:
 	touches = pygame.key.get_pressed()
 
 	if touches[pygame.K_ESCAPE]:
-		continuer = False
+		state = "Menu"
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			continuer = False
 
+	if state == "Intro":
+		horloge.tick(10)
+		loading.Afficher()
+		barDeProgression.Afficher()
+		if time == 50:
+			state = "Menu"
+			son_menu.play()
+
+
 	if state == "Menu":
+
+		horloge.tick(10)
+		
 		menu_fond.Afficher()
+		interface.Afficher()
 		text_presentation.Afficher()
 		play_Bouton.Afficher()
-		option_Bouton.Afficher()
 		exit_Bouton.Afficher()
-		horloge.tick(10)
-
-		selection_menu = move_Pointeur(selection_menu, touches, son_pointeur_menu)
+		Settings.Afficher()
+		Shop.Afficher()
+		
+		selection_menu = move_Pointeur(selection_menu, touches)
 
 		if selection_menu == 1:
 			pointeur1.Afficher()
@@ -83,12 +104,13 @@ while continuer:
 		if selection_menu == 2:
 			pointeur2.Afficher()
 			if touches[pygame.K_RETURN]:
-				state = 'Option'
+				continuer = False
 
 		if selection_menu == 3:
-			pointeur3.Afficher()
-			if touches[pygame.K_RETURN]:
-				continuer = False
+			pointeur_settings.Afficher()
+		
+		if selection_menu == 4 :
+			pointeur_Shop.Afficher()
 
 	if state == "Jeu":
 
