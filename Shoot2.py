@@ -129,7 +129,6 @@ while continuer:
 		exit_Bouton.Afficher()
 		Settings.Afficher()
 		Shop.Afficher()
-		# test =========== *******
 # ============================ Mouse Gestion ============================
 		select = pygame.Rect(xs, ys, 1, 1)
 
@@ -208,9 +207,7 @@ while continuer:
 			enemy.Afficher()
 			enemy.Collisions(perso, perso, time)
 
-			if enemy.object == "Boss" and enemy.vie <= 0:
-				if time%500 != 0:
-					afficherMsgBoss(bank["msgKillB"], fenetre)
+
 
 			for tir in perso.tirs:
 				enemy.Collisions(tir, perso, time)
