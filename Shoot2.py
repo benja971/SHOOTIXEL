@@ -26,6 +26,7 @@ selection_menu = 1
 selection_menu1 = 1
 enemys = []
 tabBonus = []
+explosions = []
 cooldownEn = 40
 cooldownBoss = 1000
 countBoss = 0
@@ -66,6 +67,10 @@ HUD = ElementGraphique(0, 0, bank["HUD"], fenetre)
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
 explosion_Red = ElementGraphiqueAnimé(0, 0, bank["explosionRed"], fenetre)
 
+# ============ mouse ==============
+x = 0
+y = 0
+# ============ mouse ==============
 
 current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #flag ****
 lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre) #flag ****
@@ -210,16 +215,17 @@ while continuer:
 			enemy.Deplacer()
 			enemy.Afficher()
 			enemy.Collisions(perso, enemy, time)
-
 				
 			for tir in perso.tirs:
 				enemy.Collisions(tir, enemy, time)
-
 			
 			for tirE in enemy.tirs:
 				tirE.Collisions(perso, perso, time)
-				p, enemy.tirs = SupprTrucs(enemy.tirs)
-
+				p, enemy.tirs = SupprTrucs(enemy.tirs, explosions, bank["explosionRed"], fenetre)
+			
+			for explosion in explosions:
+				explosion.Afficher()
+				explosion.killExplode()
 		
 		
 		for bonus in tabBonus:
@@ -246,9 +252,10 @@ while continuer:
 		perso.Tir(bank["tirsP"], touches, time, tir_son)
 
 	
-		x, enemys = SupprTrucs(enemys)
-		p, perso.tirs = SupprTrucs(perso.tirs)
-		p, tabBonus = SupprTrucs(tabBonus)
+		x, enemys = SupprTrucs(enemys, explosions, bank["explosionRed"], fenetre)
+		p, perso.tirs = SupprTrucs(perso.tirs, explosions, bank["explosionRed"], fenetre)
+		p, tabBonus = SupprTrucs(tabBonus, explosions, bank["explosionRed"], fenetre)
+		p, explosions = SupprTrucs(explosions, explosions, bank["explosionRed"], fenetre)
 		
 		perso.kill += x
 

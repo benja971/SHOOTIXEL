@@ -7,12 +7,13 @@ class ElementGraphique:
 	Tout est élément graphique
 	"""
 
-	def __init__(self, x, y, img, fenetre):
+	def __init__(self, x, y, img, fenetre, pv = 0):
 		self.image = img
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
 		self.fenetre = fenetre
+		self.vie = pv
 
 	def Collide(self, other):
 		if self.rect.colliderect(other.rect):
@@ -47,6 +48,12 @@ class ElementGraphique:
 					self.Kill()
 					perso.TakeDamages(self)
 
+	def die(self, explosions, imgs, fenetre):
+		"""
+		Fonction appelée au moment de la mort
+		"""
+		...
+
 
 	def TakeDamages(self, other):
 		"""
@@ -69,15 +76,16 @@ class ElementGraphiqueAnimé(ElementGraphique):
 	Animation des Elements Graphiques
 	"""
 
-	def __init__(self, x, y, img, fenetre):
+	def __init__(self, x, y, img, fenetre, pv = 0):
 		super().__init__(x, y, img[0], fenetre)
 		self.images = img
 		self.timer = 0
 		self.numAnim = 0
+		self.vie = pv
 
 	def Afficher(self):
 		self.timer += 1
-		if self.timer > 10:
+		if self.timer > 15:
 			self.timer = 0
 			self.numAnim += 1
 			if self.numAnim >= len(self.images):
@@ -86,6 +94,9 @@ class ElementGraphiqueAnimé(ElementGraphique):
 
 		super().Afficher()
 
+	def killExplode(self):
+		if self.timer == 0:
+			self.vie -= 1
 
 class ElementAnimeDir(ElementGraphiqueAnimé):
 	def __init__(self, x, y, images_all_dir, fenetre):
@@ -208,14 +219,13 @@ class Enemy(ElementGraphiqueAnimé):
 	"""
 	Ennemis animés arrivant en face du personnage
 	"""
-
-	def __init__(self, x, y, img, fenetre, pv, v, d, largeur, objectt, ptir):
+	def __init__(self, x, y, img, fenetre, v, d, largeur, objectt, ptir):
 		super().__init__(x, y, img, fenetre)
-		self.vie = pv
 		self.vitesse = v
 		self.degats = d
 		self.t = 0
 		self.object = objectt
+		self.vie = 15 if self.object == "Enemy" else 200
 		self.trucy = randint(-10, 0)
 		self.truc2 = randint(200, largeur - 50)
 		self.Deplacer = self.DescenteLinéaire
@@ -263,8 +273,7 @@ class Enemy(ElementGraphiqueAnimé):
 		"""
 		"""
 		if self.peutire and i % self.cooldown == 0:
-			self.tirs.append(Tir(self.rect.x + self.rect.w//2, self.rect.y +
-								 self.rect.h + 10, img, fenetre, -5, 15, self, "TirEnnemy"))
+			self.tirs.append(Tir(self.rect.x + self.rect.w//2, self.rect.y + self.rect.h + 10, img, fenetre, -5, 15, self, "TirEnnemy"))
 
 	def deplacerAfficherTirs(self):
 		"""
@@ -273,7 +282,8 @@ class Enemy(ElementGraphiqueAnimé):
 			tir.Deplacer()
 			tir.Afficher()
 
-	
+	def die(self, explosions, imgs, fenetre):
+		explosions.append(ElementGraphiqueAnimé(self.rect.centerx, self.rect.centery, imgs, fenetre, len(imgs)+1 ))
 
 class Tir(ElementGraphiqueAnimé):
 	"""

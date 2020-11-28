@@ -30,9 +30,8 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 		bank["tirsE"].append(pygame.transform.rotate(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"), 180))
 		bank["tirsP"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
-	bank["explosionRed"] = []
-	for i in range(6,9):
-		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/ExplosionRed" + str(i) + ".png"))
+	for i in range(1,9):
+		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/Explosion02_Frame_0" + str(i) + "_png_processed.png"))
 
 	# ============= Intro =============	
 	bank["progression"] = []
@@ -88,13 +87,11 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 
 	return bank
 
-def New_Eplod(img, enemys, x, y, fenetre)
-
 def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
-	enemys.append(Enemy(randint(200, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 15, 2, 20, largeur, "Enemy", choice([True, False])))
+	enemys.append(Enemy(randint(200, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 2, 20, largeur, "Enemy", choice([True, False])))
 	enemys[-1].Choix(i)
 
 
@@ -102,8 +99,7 @@ def New_Boss(img, enemys, largeur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 boss à la liste d'ennemis
 	"""
-	enemys.append(Enemy(largeur//2 + 150 - 15, -10, img, fenetre,
-						200, 1, 0, largeur, "Boss", choice([True, False])))
+	enemys.append(Enemy(largeur//2 + 150 - 15, -10, img, fenetre, 1, 0, largeur, "Boss", choice([True, False])))
 	
 	enemys[-1].Choix(i)
 
@@ -113,7 +109,7 @@ def New_Bonus(tabBonus, bank, fenetre, largeur, time):
 	tabBonus.append(Bonus(randint(150, largeur), randint(-20, -5), bank[t], fenetre, t, time))
 
 
-def SupprTrucs(liste):
+def SupprTrucs(liste, explosions, imgs, fenetre):
 	"""
 	Fonction qui supprime les éléments des listes qui ne doivent plus yêtre
 	"""
@@ -121,7 +117,8 @@ def SupprTrucs(liste):
 	for element in liste:
 		if element.vie > 0:
 			liste_keep.append(element)
-
+		else:
+			element.die(explosions, imgs, fenetre)
 	x = len(liste) - len(liste_keep)
 	
 	return x, liste_keep
@@ -164,15 +161,6 @@ def select_collide_2(select, pointeur_settings, settings, pointeur_shop, shop) :
 
     return select
 
-def save_score(score) :
-     with open('score', 'wb') as fichier:
-        mon_pickler = pickle.Pickler(fichier)
-        mon_pickler.dump(score)
-
-# def open_score() :
-#     with open('score', 'rb') as fichier:
-#         mon_depickler = pickle.Unpickler(fichier)
-#         score_recupere = mon_depickler.load()
 
 def afficherMsgBoss(img, fenetre):
 	"""
