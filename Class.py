@@ -30,7 +30,7 @@ class ElementGraphique:
 				if other.object == "TirPerso":
 					self.TakeDamages(other)
 					other.Kill()
-
+					
 				elif other.object == "Perso":
 					self.Kill()
 					if other.invinsible == False:
@@ -47,6 +47,7 @@ class ElementGraphique:
 					self.Kill()
 					perso.TakeDamages(self)
 
+
 	def TakeDamages(self, other):
 		"""
 		Fonction qui retire de la vie à un élément en cas de collision
@@ -57,8 +58,8 @@ class ElementGraphique:
 		"""
 		Fonction qui tue un élément
 		"""
-		self.vie = 0
-
+		self.vie = 0 
+		
 	def Afficher(self):
 		self.fenetre.blit(self.image, self.rect)
 
@@ -270,12 +271,14 @@ class Enemy(ElementGraphiqueAnimé):
 			tir.Deplacer()
 			tir.Afficher()
 
-	def Explod(self):
+	def Explod(self, explosion):
 		"""
 		"""
-		for exploxion_Red in self.explods:
-			if self.vie <= 0:
-				exploxion_Red.Afficher()
+		if self.vie == 0 :
+			explosion.Afficher()				
+			print("Mort")
+
+
 
 
 class Tir(ElementGraphiqueAnimé):

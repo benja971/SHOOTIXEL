@@ -29,7 +29,7 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 		bank["tirsE"].append(pygame.transform.rotate(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"), 180))
 		bank["tirsP"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
-	for i in range(1,9):
+	for i in range(6,9):
 		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/ExplosionRed" + str(i) + ".png"))
 
 	# ============= Intro =============	
@@ -101,6 +101,7 @@ def New_Boss(img, enemys, largeur, fenetre, i):
 	"""
 	enemys.append(Enemy(largeur//2 + 150 - 15, -10, img, fenetre,
 						200, 1, 0, largeur, "Boss", choice([True, False])))
+	
 	enemys[-1].Choix(i)
 
 
@@ -119,6 +120,7 @@ def SupprTrucs(liste):
 			liste_keep.append(element)
 
 	x = len(liste) - len(liste_keep)
+	
 	return x, liste_keep
 
 def move_Pointeur(selection_menu, touches):

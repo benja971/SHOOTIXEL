@@ -64,8 +64,12 @@ fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
 HUD = ElementGraphique(0, 0, bank["HUD"], fenetre)
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
-exploxion_Red = ElementGraphiqueAnimé(0, 0, bank["explosionRed"], fenetre)
 
+# test==============
+x = 0
+y = 0
+exploxion_Red = ElementGraphiqueAnimé(x, y, bank["explosionRed"], fenetre)
+# test==============
 
 current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #flag ****
 lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre) #flag ****
@@ -208,17 +212,19 @@ while continuer:
 			enemy.deplacerAfficherTirs()
 			enemy.Deplacer()
 			enemy.Afficher()
-			enemy.Explod()
-			enemy.Collisions(perso, perso, time)
-
-	
+			enemy.Collisions(perso, enemy, time)
+			enemy.Explod(exploxion_Red)
+				
 			for tir in perso.tirs:
-				enemy.Collisions(tir, perso, time)
+				enemy.Collisions(tir, enemy, time)
+				enemy.Explod(exploxion_Red)
 			
 			for tirE in enemy.tirs:
 				tirE.Collisions(perso, perso, time)
 				p, enemy.tirs = SupprTrucs(enemy.tirs)
 
+		
+		
 		for bonus in tabBonus:
 			bonus.Afficher()
 			bonus.Deplacer(largeur, hauteur)
@@ -235,11 +241,14 @@ while continuer:
 			for bonus in tabBonus:
 				bonus.Collisions(tir, perso, time)
 				bonus.resetBonus(perso, time)
+		
 
+		
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
 		perso.Tir(bank["tirsP"], touches, time, tir_son)
 
+	
 		x, enemys = SupprTrucs(enemys)
 		p, perso.tirs = SupprTrucs(perso.tirs)
 		p, tabBonus = SupprTrucs(tabBonus)
@@ -251,6 +260,7 @@ while continuer:
 			bank["kill"] = font_standart.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 			kill = ElementGraphique(95, 0, bank["kill"], fenetre)
 			kill.Afficher()
+
 
 		bank["life"] = font_standart.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
 		perso_life = ElementGraphique(70, 40, bank["life"], fenetre)
