@@ -23,6 +23,7 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 	bank["cooldown"] = pygame.image.load("./Images/Bonus/Powerup_Ammo.png")
 	bank["tirsE"] = []
 	bank["tirsP"] = []
+	bank["tirsP"] = []
 
 	bank["HUD"] = pygame.image.load("./Images/Hud.png")
 
@@ -31,7 +32,7 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 		bank["tirsP"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
 	for i in range(1,9):
-		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/Explosion02_Frame_0" + str(i) + "_png_processed.png"))
+		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/Explosion01_Frame_0" + str(i) + "_png_processed.png"))
 
 	# ============= Intro =============	
 	bank["progression"] = []
