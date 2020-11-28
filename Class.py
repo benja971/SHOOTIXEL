@@ -269,6 +269,13 @@ class Enemy(ElementGraphiqueAnimé):
 			tir.Deplacer()
 			tir.Afficher()
 
+	def Explod(self,explosion_Red):
+		"""
+		"""
+		print(self.vie)
+		if self.vie <= 0:
+			explosion_Red.Afficher()
+			print("ok")
 
 class Tir(ElementGraphiqueAnimé):
 	"""

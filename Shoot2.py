@@ -21,13 +21,13 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Menu"
+state = "Jeu"
 selection_menu = 1
 selection_menu1 = 1
 enemys = []
 tabBonus = []
 cooldownEn = 40
-cooldownBoss = 100
+cooldownBoss = 1000
 countBoss = 0
 boss = False
 couldown = 40
@@ -60,10 +60,12 @@ son_menu = pygame.mixer.Sound("./son Effect/Menu/Menu.wav")
 
 # ============= Jeu =============
 perso = Perso(0, 0, bank["perso"], fenetre, largeur, hauteur)
-fondJeu = ElementGraphique(150, 0, bank["fond"], fenetre)
+fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
+HUD = ElementGraphique(0, 0, bank["HUD"], fenetre)
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
-BLACK = (0, 0, 0)
+exploxion_Red = ElementGraphiqueAnimé(0, 0, bank["explosionRed"], fenetre)
+
 
 current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #flag ****
 lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre) #flag ****
@@ -177,8 +179,9 @@ while continuer:
 # ========================= Keyboard Management ========================= 
 
 	if state == "Jeu":
-		fenetre.fill(BLACK)
+		
 		fondJeu.Afficher()
+		HUD.Afficher()
 
 		if time % 333 == 0 and len(tabBonus) <= 1:
 			New_Bonus(tabBonus, bank, fenetre, largeur, time)
@@ -203,10 +206,10 @@ while continuer:
 		for enemy in enemys:
 			enemy.tir(bank["tirsE"], fenetre, time)
 			enemy.deplacerAfficherTirs()
-			enemy.DescenteEnCercles()
+			enemy.Deplacer()
 			enemy.Afficher()
 			enemy.Collisions(perso, perso, time)
-
+			enemy.Explod(exploxion_Red)
 
 
 			for tir in perso.tirs:
@@ -268,10 +271,10 @@ while continuer:
 		# if perso.vie == 25 :
 		# 	vie_25.Afficher()
 
-		if perso.vie <= 0 :
-			save_score(perso.kill)
-			state = "Lose"
-			son_menu.play()
+		# if perso.vie <= 0 :
+		# 	save_score(perso.kill)
+		# 	state = "Lose"
+		# 	son_menu.play()
 
 # test flag *** ==============
 		score.Afficher()

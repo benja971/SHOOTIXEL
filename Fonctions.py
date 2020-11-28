@@ -22,10 +22,15 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 	bank["cooldown"] = pygame.image.load("./Images/Bonus/Powerup_Ammo.png")
 	bank["tirsE"] = []
 	bank["tirsP"] = []
+	bank["explosionRed"] = []
+	bank["HUD"] = pygame.image.load("./Images/Hud.png")
 
 	for i in range(1, 6):
 		bank["tirsE"].append(pygame.transform.rotate(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"), 180))
 		bank["tirsP"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
+
+	for i in range(1,9):
+		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/ExplosionRed" + str(i) + ".png"))
 
 	# ============= Intro =============	
 	bank["progression"] = []
@@ -44,8 +49,6 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 	bank['shop'] = pygame.image.load("./Images/Menu/Shop.png")
 	bank['Psettings'] = pygame.image.load("./Images/Menu/Psettings.png")
 	bank['Pshop'] = pygame.image.load("./Images/Menu/Pshop.png")
-	
-
 	bank["text_menu"] = font_menu.render('SHOOTIXEL', True, (255, 255, 255))
 	# ============= Menu =============
 
