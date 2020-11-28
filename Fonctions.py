@@ -3,6 +3,7 @@ import pickle
 from random import randint, choice
 from Class import Enemy
 from Class import Bonus
+from Class import ElementGraphiqueAnimé
 
 
 def images(font_jeu, font_intro, font_menu, font_standart):
@@ -22,13 +23,14 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 	bank["cooldown"] = pygame.image.load("./Images/Bonus/Powerup_Ammo.png")
 	bank["tirsE"] = []
 	bank["tirsP"] = []
-	bank["explosionRed"] = []
+
 	bank["HUD"] = pygame.image.load("./Images/Hud.png")
 
 	for i in range(1, 6):
 		bank["tirsE"].append(pygame.transform.rotate(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"), 180))
 		bank["tirsP"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
+	bank["explosionRed"] = []
 	for i in range(6,9):
 		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/ExplosionRed" + str(i) + ".png"))
 
@@ -86,6 +88,7 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 
 	return bank
 
+def New_Eplod(img, enemys, x, y, fenetre)
 
 def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
 	"""

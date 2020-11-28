@@ -64,12 +64,8 @@ fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
 HUD = ElementGraphique(0, 0, bank["HUD"], fenetre)
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
+explosion_Red = ElementGraphiqueAnimé(0, 0, bank["explosionRed"], fenetre)
 
-# test==============
-x = 0
-y = 0
-exploxion_Red = ElementGraphiqueAnimé(x, y, bank["explosionRed"], fenetre)
-# test==============
 
 current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #flag ****
 lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre) #flag ****
@@ -206,6 +202,7 @@ while continuer:
 		if len(enemys) > 0:
 			if enemys[-1].object == "Enemy" and boss:
 				boss = False
+		
 
 		for enemy in enemys:
 			enemy.tir(bank["tirsE"], fenetre, time)
@@ -213,11 +210,11 @@ while continuer:
 			enemy.Deplacer()
 			enemy.Afficher()
 			enemy.Collisions(perso, enemy, time)
-			enemy.Explod(exploxion_Red)
+
 				
 			for tir in perso.tirs:
 				enemy.Collisions(tir, enemy, time)
-				enemy.Explod(exploxion_Red)
+
 			
 			for tirE in enemy.tirs:
 				tirE.Collisions(perso, perso, time)
@@ -254,6 +251,9 @@ while continuer:
 		p, tabBonus = SupprTrucs(tabBonus)
 		
 		perso.kill += x
+
+		
+
 		# perso.Alive()
 
 		if perso.kill > 0:

@@ -222,7 +222,9 @@ class Enemy(ElementGraphiqueAnimé):
 		self.cooldown = 100
 		self.peutire = ptir
 		self.tirs = []
-		self.explods = []
+		self.enemy.x = x
+		self.enemy.y = y
+
 
 	def Choix(self, i):
 		"""
@@ -271,15 +273,7 @@ class Enemy(ElementGraphiqueAnimé):
 			tir.Deplacer()
 			tir.Afficher()
 
-	def Explod(self, explosion):
-		"""
-		"""
-		if self.vie == 0 :
-			explosion.Afficher()				
-			print("Mort")
-
-
-
+	
 
 class Tir(ElementGraphiqueAnimé):
 	"""
