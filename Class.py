@@ -221,6 +221,7 @@ class Enemy(ElementGraphiqueAnimé):
 		self.cooldown = 100
 		self.peutire = ptir
 		self.tirs = []
+		self.explods = []
 
 	def Choix(self, i):
 		"""
@@ -269,13 +270,13 @@ class Enemy(ElementGraphiqueAnimé):
 			tir.Deplacer()
 			tir.Afficher()
 
-	def Explod(self,explosion_Red):
+	def Explod(self):
 		"""
 		"""
-		print(self.vie)
-		if self.vie <= 0:
-			explosion_Red.Afficher()
-			print("ok")
+		for exploxion_Red in self.explods:
+			if self.vie <= 0:
+				exploxion_Red.Afficher()
+
 
 class Tir(ElementGraphiqueAnimé):
 	"""

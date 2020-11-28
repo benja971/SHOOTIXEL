@@ -208,10 +208,10 @@ while continuer:
 			enemy.deplacerAfficherTirs()
 			enemy.Deplacer()
 			enemy.Afficher()
+			enemy.Explod()
 			enemy.Collisions(perso, perso, time)
-			enemy.Explod(exploxion_Red)
 
-
+	
 			for tir in perso.tirs:
 				enemy.Collisions(tir, perso, time)
 			
