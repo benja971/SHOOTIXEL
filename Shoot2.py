@@ -29,10 +29,8 @@ tabBonus = []
 explosions = []
 cooldownEn = 40
 cooldownBoss = 1000
-countBoss = 0
 boss = False
 couldown = 40
-msgdeb = 0
 
 xs, ys = 0, 0 #flag test*********
 
@@ -42,7 +40,7 @@ barDeProgression = ElementGraphiqueAnimé(largeur/2 - 160, 350, bank["progressio
 loading = ElementGraphique(largeur/2 - 160, 290, bank["loading"], fenetre)
 
 # ============= Menu =============
-menu_fond = ElementGraphique(0 , 50, bank['Main'], fenetre)
+menu_fond = ElementGraphique(0 , 0, bank['Main'], fenetre)
 interface = ElementGraphique(largeur/2-325 , 70, bank['interface'], fenetre)
 play_Bouton = ElementGraphique(largeur / 2 - 120, 225, bank['Play'], fenetre)
 text_presentation = ElementGraphique(largeur/2 - 160, 95, bank["text_menu"], fenetre)
@@ -63,16 +61,8 @@ son_menu = pygame.mixer.Sound("./son Effect/Menu/Menu.wav")
 perso = Perso(0, 0, bank["perso"], fenetre, largeur, hauteur)
 fondJeu = ElementGraphique(0, 0, bank["fond"], fenetre)
 score = ElementGraphique(0, 0, bank["score"], fenetre)
-HUD = ElementGraphique(0, 0, bank["HUD"], fenetre)
 tir_son = pygame.mixer.Sound("./son Effect/Menu/tir-son.wav")
-explosion_Red = ElementGraphiqueAnimé(0, 0, bank["explosionRed"], fenetre)
 
-# ============ mouse ==============
-x = 0
-y = 0
-# ============ mouse ==============
-
-current_life = ElementGraphique(0, 40, bank["current_life"], fenetre) #flag ****
 lose_text = ElementGraphique(largeur/2 - 160, 95, bank["lose"], fenetre) #flag ****
 # ============= Jeu =============
 
@@ -98,14 +88,13 @@ while continuer:
 			son_menu.play()
 
 	if state == "Lose" :
-		# horloge.tick(10)
+
 		menu_fond.Afficher()
 		interface.Afficher()
 		lose_text.Afficher()    
 		play_Bouton.Afficher()    
 		exit_Bouton.Afficher()
 		
-		# test =========== *******
 # ============================ Mouse Gestion ============================
 		select = pygame.Rect(xs, ys, 1, 1)
 
@@ -115,9 +104,17 @@ while continuer:
 			if event.type == pygame.MOUSEMOTION :
 				xs = event.pos[0]
 				ys = event.pos[1]
+				
 			if select.colliderect(play_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				boss = False
 				time = 0
 				perso.vie = 100
+				perso.tirs = []
+				enemys = []
+				tabBonus = []
+				explosions = []
+				perso.kill = 0
+				Enemy.Deplacer = Enemy.DescenteLinéaire
 				son_menu.stop()
 				state = "Jeu"
 			
@@ -126,7 +123,7 @@ while continuer:
 # ============================ Mouse Gestion ============================
 
 	if state == "Menu":
-
+	
 		horloge.tick(30)
 		
 		menu_fond.Afficher()
@@ -154,39 +151,13 @@ while continuer:
 			if select.colliderect(exit_Bouton.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
 				continuer = False
 
-			# if select.colliderect(Settings.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
-				# do .....
-
-			# if select.colliderect(Shop.rect) and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
-				# do ...
-				
-# ============================ Mouse Gestion ============================
-# 	
-# ========================= Keyboard Management ========================= 
-		# selection_menu = move_Pointeur(selection_menu, touches)
-
-		# if selection_menu == 1:
-		# 	pointeur1.Afficher()
-		# 	if touches[pygame.K_RETURN]:
-		# 		son_menu.stop()
-		# 		state = 'Jeu'
-
-		# if selection_menu == 2:
-		# 	pointeur2.Afficher()
-		# 	if touches[pygame.K_RETURN]:
-		# 		continuer = False
-
-		# if selection_menu == 3:
-		# 	pointeur_settings.Afficher()
-
-		# if selection_menu == 4 :
-		# 	pointeur_Shop.Afficher()
-# ========================= Keyboard Management ========================= 
 
 	if state == "Jeu":
 		
+		state = perso.Alive()
+
 		fondJeu.Afficher()
-		HUD.Afficher()
+		# HUD.Afficher()
 
 		if time % 333 == 0 and len(tabBonus) <= 1:
 			New_Bonus(tabBonus, bank, fenetre, largeur, time)
@@ -195,11 +166,11 @@ while continuer:
 			cooldownEn -= 1
 
 		if time%cooldownEn == 0 and not boss:
-			New_Enemy(bank["enemys"], enemys, largeur, hauteur, fenetre, time)
+			New_Enemy(bank, enemys, largeur, hauteur, fenetre, time)
 
 		if time % cooldownBoss == 0:
 			boss = True
-			New_Boss(bank["boss"], enemys, largeur, fenetre, time)
+			New_Boss(bank, enemys, largeur, fenetre, time)
 
 		if len(enemys) > 0 and boss and enemys[-1].vie <= 0 and enemys[-1].object == "Boss":
 			boss = False
@@ -208,8 +179,8 @@ while continuer:
 			if enemys[-1].object == "Enemy" and boss:
 				boss = False
 		
-
 		for enemy in enemys:
+
 			enemy.tir(bank["tirsE"], fenetre, time)
 			enemy.deplacerAfficherTirs()
 			enemy.Deplacer()
@@ -221,12 +192,11 @@ while continuer:
 			
 			for tirE in enemy.tirs:
 				tirE.Collisions(perso, perso, time)
-				p, enemy.tirs = SupprTrucs(enemy.tirs, explosions, bank["explosionRed"], fenetre)
+				p, enemy.tirs = SupprTrucs(enemy.tirs, explosions, bank, fenetre)
 			
 			for explosion in explosions:
 				explosion.Afficher()
 				explosion.killExplode()
-		
 		
 		for bonus in tabBonus:
 			bonus.Afficher()
@@ -245,57 +215,20 @@ while continuer:
 				bonus.Collisions(tir, perso, time)
 				bonus.resetBonus(perso, time)
 		
-
-		
 		perso.Afficher()
 		perso.Deplacer(touches, largeur)
 		perso.Tir(bank["tirsP"], touches, time, tir_son)
-
-	
-		x, enemys = SupprTrucs(enemys, explosions, bank["explosionRed"], fenetre)
-		p, perso.tirs = SupprTrucs(perso.tirs, explosions, bank["explosionRed"], fenetre)
-		p, tabBonus = SupprTrucs(tabBonus, explosions, bank["explosionRed"], fenetre)
-		p, explosions = SupprTrucs(explosions, explosions, bank["explosionRed"], fenetre)
+		x, enemys = SupprTrucs(enemys, explosions, bank, fenetre)
+		p, perso.tirs = SupprTrucs(perso.tirs, explosions, bank, fenetre)
+		p, tabBonus = SupprTrucs(tabBonus, explosions, bank, fenetre)
+		p, explosions = SupprTrucs(explosions, explosions, bank, fenetre)
 		
 		perso.kill += x
-
-		
-
-		# perso.Alive()
 
 		if perso.kill > 0:
 			bank["kill"] = font_standart.render(str(perso.kill), 1, (255, 0, 0)).convert_alpha()
 			kill = ElementGraphique(95, 0, bank["kill"], fenetre)
 			kill.Afficher()
-
-
-		bank["life"] = font_standart.render(str(perso.vie), 1, (255, 0, 0)).convert_alpha()
-		perso_life = ElementGraphique(70, 40, bank["life"], fenetre)
-	
-		perso_life.Afficher()
-
-# test flag *** ==============
-# En attendant de trouver une lsite d'image 
-		# if perso.vie == 100 :
-		# 	vie_100.Afficher()
-
-		# if perso.vie == 75 :
-		# 	vie_75.Afficher()
-
-		# if perso.vie == 50 :
-		# 	vie_50.Afficher()
-
-		# if perso.vie == 25 :
-		# 	vie_25.Afficher()
-
-		# if perso.vie <= 0 :
-		# 	save_score(perso.kill)
-		# 	state = "Lose"
-		# 	son_menu.play()
-
-# test flag *** ==============
-		score.Afficher()
-		current_life.Afficher() #flag ****
 
 		score.Afficher()
 

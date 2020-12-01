@@ -161,15 +161,15 @@ class Perso(ElementAnimeDir):
 
 	def Tir(self, img, touches, i, son_tir):
 		if touches[pygame.K_SPACE] and i % self.cooldown == 0:
-			self.tirs.append(Tir(self.rect.x - 12 + self.rect.w//2,
-								 self.rect.y - 30, img, self.fenetre, 7, 15, self, "TirPerso"))
+			self.tirs.append(Tir(self.rect.x - 12 + self.rect.w//2, self.rect.y - 30, img, self.fenetre, 7, 15, self, "TirPerso"))
 			son_tir.play()
 
 	def Alive(self):
 		"""
 		"""
 		if self.vie <= 0:
-			print("Perdu")
+			return "Lose"
+		return "Jeu"
 
 	def speedUp(self):
 		"""
@@ -219,21 +219,22 @@ class Enemy(ElementGraphiqueAnimé):
 	"""
 	Ennemis animés arrivant en face du personnage
 	"""
-	def __init__(self, x, y, img, fenetre, v, d, largeur, objectt, ptir):
+	def __init__(self, x, y, img, fenetre, v, d, largeur, objectt, ptir, c):
 		super().__init__(x, y, img, fenetre)
 		self.vitesse = v
 		self.degats = d
 		self.t = 0
+		self.color = c
 		self.object = objectt
 		self.vie = 15 if self.object == "Enemy" else 200
 		self.trucy = randint(-10, 0)
 		self.truc2 = randint(200, largeur - 50)
 		self.Deplacer = self.DescenteLinéaire
-		self.cooldown = 100
+		self.cooldown = 150
 		self.peutire = ptir
 		self.tirs = []
-		self.enemy.x = x
-		self.enemy.y = y
+		self.x = x
+		self.y = y
 
 
 	def Choix(self, i):
@@ -282,8 +283,11 @@ class Enemy(ElementGraphiqueAnimé):
 			tir.Deplacer()
 			tir.Afficher()
 
-	def die(self, explosions, imgs, fenetre):
-		explosions.append(ElementGraphiqueAnimé(self.rect.centerx, self.rect.centery, imgs, fenetre, len(imgs)+1 ))
+	def die(self, explosions, fenetre, bank):
+		if self.object == "Enemy":
+			explosions.append(ElementGraphiqueAnimé(self.rect.centerx, self.rect.centery, bank["explosions"][self.color], fenetre, len(bank["explosions"][self.color])+1 ))
+		else:
+			explosions.append(ElementGraphiqueAnimé(self.rect.centerx - 25, self.rect.centery, bank["boss"]["explosion"], fenetre, len(bank["boss"]["explosion"])+1 ))
 
 class Tir(ElementGraphiqueAnimé):
 	"""

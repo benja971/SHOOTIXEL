@@ -1,9 +1,7 @@
 import pygame
-import pickle
 from random import randint, choice
 from Class import Enemy
 from Class import Bonus
-from Class import ElementGraphiqueAnimé
 
 
 def images(font_jeu, font_intro, font_menu, font_standart):
@@ -13,16 +11,37 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 	bank = {}
 
 	bank["fond"] = pygame.image.load("./Images/fond.jpg")
-	bank["enemys"] = []
-	bank["tirs"] = pygame.image.load("./Images/Tirs/bullet_blue.png")
-	bank["boss"] = []
+
+	vaisseaux = {}
+	vaisseaux["red"] = [pygame.image.load("./Images/Vaisseaux/Enemy02Red1.png")]
+	vaisseaux["green"] = [pygame.image.load("./Images/Vaisseaux/Enemy02Green.png")]
+	bank["vaisseaux"] = vaisseaux
+
+	explosions = {}
+	explosions["red"] = []
+	explosions["green"] = []
+	bank["explosions"] = explosions
+	
+	boss = {}
+	boss["red"] = [pygame.image.load("./Images/Vaisseaux/Enemy01_Red_Frame_1_png_processed.png")]
+	boss["green"] = [pygame.image.load("./Images/Vaisseaux/Enemy01_Green_Frame_1_png_processed.png")]
+	boss["blue"] = [pygame.image.load("./Images/Vaisseaux/Enemy01_Teal_Frame_1_png_processed.png")]
+	boss["explosion"] = []
+
+	for i in range(23):
+		if i > 9:
+			boss["explosion"].append(pygame.image.load("./Images/Explosions/tile0" + str(i) + ".png"))
+		else:
+			boss["explosion"].append(pygame.image.load("./Images/Explosions/tile00" + str(i) + ".png"))
+		
+	bank["boss"] = boss
 	bank["speed"] = pygame.image.load("./Images/Bonus/Powerup_Energy.png")
 	bank["damages"] = pygame.image.load("./Images/Bonus/Powerup_Rocket.png")
 	bank["shield"] = pygame.image.load("./Images/Bonus/Powerup_Shields.png")
 	bank["heal"] = pygame.image.load("./Images/Bonus/Powerup_Health.png")
 	bank["cooldown"] = pygame.image.load("./Images/Bonus/Powerup_Ammo.png")
+
 	bank["tirsE"] = []
-	bank["tirsP"] = []
 	bank["tirsP"] = []
 
 	bank["HUD"] = pygame.image.load("./Images/Hud.png")
@@ -31,8 +50,9 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 		bank["tirsE"].append(pygame.transform.rotate(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"), 180))
 		bank["tirsP"].append(pygame.image.load("./Images/Tirs/Exhaust_Frame_0" + str(i) + "_png_processed.png"))
 
-	for i in range(1,9):
-		bank["explosionRed"].append(pygame.image.load("./Images/Explosions/Explosion01_Frame_0" + str(i) + "_png_processed.png"))
+	for i in range(2 ,9):
+		bank["explosions"]["red"].append(pygame.image.load("./Images/Explosions/Explosion01_Frame_0"+ str(i)+"_png_processed.png"))
+		bank["explosions"]["green"].append(pygame.image.load("./Images/Explosions/Explosion02_Frame_0" + str(i) + "_png_processed.png"))
 
 	# ============= Intro =============	
 	bank["progression"] = []
@@ -61,10 +81,6 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 	bank['Vie100'] = pygame.image.load("./Images/Life100.png").convert_alpha()
 	# ============= Life =============
 
-	bank["enemys"].append(pygame.image.load("./Images/Vaisseaux/Enemy02Red1.png"))
-	bank["boss"].append(pygame.image.load(
-		"./Images/Vaisseaux/Enemy01_Red_Frame_1_png_processed.png"))
-
 	imgPerso = {}
 	imgPerso["Right"] = []
 	imgPerso["Left"] = []
@@ -88,19 +104,21 @@ def images(font_jeu, font_intro, font_menu, font_standart):
 
 	return bank
 
-def New_Enemy(img, enemys, largeur, hauteur, fenetre, i):
+def New_Enemy(bank, enemys, largeur, hauteur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 ennemi à la liste d'ennemis
 	"""
-	enemys.append(Enemy(randint(200, largeur - 50), randint(-hauteur //2, 0), img, fenetre, 2, 20, largeur, "Enemy", choice([True, False])))
+	c = choice(["red", "green"])
+	enemys.append(Enemy(randint(200, largeur - 50), randint(-hauteur //2, 0), bank["vaisseaux"][c], fenetre, 2, 20, largeur, "Enemy", choice([0, 1, 2]), c))
 	enemys[-1].Choix(i)
 
 
-def New_Boss(img, enemys, largeur, fenetre, i):
+def New_Boss(bank, enemys, largeur, fenetre, i):
 	"""
 	Fonction qui ajoute 1 boss à la liste d'ennemis
 	"""
-	enemys.append(Enemy(largeur//2 + 150 - 15, -10, img, fenetre, 1, 0, largeur, "Boss", choice([True, False])))
+	c = choice(["red", "green", "blue"])
+	enemys.append(Enemy(largeur//2 + 150 - 15, -10, bank["boss"][c], fenetre, 1, 0, largeur, "Boss", choice([0, 1, 2]), c))
 	
 	enemys[-1].Choix(i)
 
@@ -110,7 +128,7 @@ def New_Bonus(tabBonus, bank, fenetre, largeur, time):
 	tabBonus.append(Bonus(randint(150, largeur), randint(-20, -5), bank[t], fenetre, t, time))
 
 
-def SupprTrucs(liste, explosions, imgs, fenetre):
+def SupprTrucs(liste, explosions, bank, fenetre):
 	"""
 	Fonction qui supprime les éléments des listes qui ne doivent plus yêtre
 	"""
@@ -119,7 +137,7 @@ def SupprTrucs(liste, explosions, imgs, fenetre):
 		if element.vie > 0:
 			liste_keep.append(element)
 		else:
-			element.die(explosions, imgs, fenetre)
+			element.die(explosions, fenetre, bank)
 	x = len(liste) - len(liste_keep)
 	
 	return x, liste_keep
@@ -161,10 +179,3 @@ def select_collide_2(select, pointeur_settings, settings, pointeur_shop, shop) :
         pointeur_shop.Afficher()
 
     return select
-
-
-def afficherMsgBoss(img, fenetre):
-	"""
-	"""
-	rectfen = fenetre.get_rect()
-	fenetre.blit(img, (rectfen.centerx, rectfen.centery))
