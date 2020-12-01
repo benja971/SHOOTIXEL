@@ -21,7 +21,7 @@ horloge = pygame.time.Clock()
 # Variables du Jeu
 continuer = True
 time = 0
-state = "Jeu"
+state = "Menu"
 selection_menu = 1
 selection_menu1 = 1
 enemys = []
